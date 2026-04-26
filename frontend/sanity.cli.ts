@@ -14,6 +14,9 @@ export default defineCliConfig({
     projectId,
     dataset,
   },
+  deployment: {
+    appId: 'x1r55faw6ima811umlbtwf98',
+  },
   typegen: {
     path: './sanity/**/*.{ts,tsx,js,jsx}',
     schema: '../sanity.schema.json',
