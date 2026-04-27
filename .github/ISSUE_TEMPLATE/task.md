@@ -2,7 +2,7 @@
 name: Task
 about: Request a new feature or a change.
 title: "[Task]"
-labels: task
+labels: ''
 assignees: ''
 type: Task
 
