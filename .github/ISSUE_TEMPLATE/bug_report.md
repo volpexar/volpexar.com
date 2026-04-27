@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to fix a problem with andeanic.com
 title: "[Bug]"
-labels: bug
+labels: ''
 assignees: ''
 type: Bug
 
