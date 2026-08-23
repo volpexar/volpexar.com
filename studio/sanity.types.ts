@@ -226,8 +226,8 @@ export type Page = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  name: string
-  slug: Slug
+  name?: string
+  slug?: Slug
   seo: Seo
   pageBuilder?: Array<
     | ({

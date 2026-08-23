@@ -27,36 +27,50 @@ const linkFields = /* groq */ `
       }
 `
 
+// The shared projection for a page document, used both for pages addressed by
+// slug and for the home page, which is addressed by its fixed document ID.
+const pageFields = /* groq */ `
+  _id,
+  _type,
+  slug,
+  seo,
+  "pageBuilder": pageBuilder[]{
+    ...,
+    _type == "callToAction" => {
+      ...,
+      button {
+        ...,
+        ${linkFields}
+      }
+    },
+    _type == "infoSection" => {
+      content[]{
+        ...,
+        markDefs[]{
+          ...,
+          ${linkReference}
+        }
+      }
+    },
+  },
+`
+
 export const getPageQuery = defineQuery(`
   *[_type == 'page' && slug.current == $slug][0]{
-    _id,
-    _type,
-    slug,
-    seo,
-    "pageBuilder": pageBuilder[]{
-      ...,
-      _type == "callToAction" => {
-        ...,
-        button {
-          ...,
-          ${linkFields}
-        }
-      },
-      _type == "infoSection" => {
-        content[]{
-          ...,
-          markDefs[]{
-            ...,
-            ${linkReference}
-          }
-        }
-      },
-    },
+    ${pageFields}
+  }
+`)
+
+// The home page is the one `page` document pinned to a fixed ID. It has no slug,
+// so it is fetched by ID and is unreachable through the /[slug] route.
+export const homePageQuery = defineQuery(`
+  *[_type == 'page' && _id == 'homePage'][0]{
+    ${pageFields}
   }
 `)
 
 export const sitemapData = defineQuery(`
-  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {
+  *[(_type == "page" || _type == "post") && defined(slug.current)] | order(_type asc) {
     "slug": slug.current,
     _type,
     _updatedAt,

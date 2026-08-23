@@ -44,6 +44,12 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
   }
 }
 
+// The home page is the one `page` document pinned to this ID. It is served at the
+// site root and has no slug, so its URL cannot be derived from one.
+const HOME_PAGE_ID = 'homePage'
+
+const isHomePage = (id?: string) => id === HOME_PAGE_ID || id === `drafts.${HOME_PAGE_ID}`
+
 // Main Sanity configuration
 export default defineConfig({
   name: 'default',
@@ -66,7 +72,7 @@ export default defineConfig({
         mainDocuments: defineDocuments([
           {
             route: '/',
-            filter: `_type == "settings" && _id == "siteSettings"`,
+            filter: `_type == "page" && _id == "${HOME_PAGE_ID}"`,
           },
           {
             route: '/:slug',
@@ -86,17 +92,25 @@ export default defineConfig({
           }),
           page: defineLocations({
             select: {
+              _id: '_id',
               name: 'name',
               slug: 'slug.current',
             },
-            resolve: (doc) => ({
-              locations: [
-                {
-                  title: doc?.name || 'Untitled',
-                  href: resolveHref('page', doc?.slug)!,
-                },
-              ],
-            }),
+            resolve: (doc) => {
+              // The home page has no slug, so its href cannot be derived from one.
+              if (isHomePage(doc?._id)) {
+                return {locations: [homeLocation]}
+              }
+
+              return {
+                locations: [
+                  {
+                    title: doc?.name || 'Untitled',
+                    href: resolveHref('page', doc?.slug)!,
+                  },
+                ],
+              }
+            },
           }),
           post: defineLocations({
             select: {
