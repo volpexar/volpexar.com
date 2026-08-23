@@ -16,34 +16,40 @@ export const page = defineType({
       name: 'name',
       title: 'Name',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      description:
+        'Used only inside the Studio to identify this page. Never shown on the website.',
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
+      description:
+        'The URL path for this page, after the domain. For example, a slug of "about" is served at /about.',
       validation: (Rule) => Rule.required(),
       options: {
         source: 'name',
         maxLength: 96,
-      },
+      },
     }),
     defineField({
-      name: 'heading',
-      title: 'Heading',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'subheading',
-      title: 'Subheading',
-      type: 'string',
+      name: 'seo',
+      title: 'SEO',
+      type: 'seo',
+      // Pages must always carry their own title, so that every page renders as
+      // "<page title> | <site name>".  The remaining SEO fields stay optional and
+      // fall back to the site-wide defaults in Site Settings.
+      validation: (Rule) =>
+        Rule.required().custom((value?: {title?: string}) =>
+          value?.title ? true : {message: 'An SEO title is required.', paths: [['title']]},
+        ),
     }),
     defineField({
       name: 'pageBuilder',
       title: 'Page builder',
       type: 'array',
+      description: 'All visible content on this page, section by section.',
       of: [{type: 'callToAction'}, {type: 'infoSection'}, {type: 'underConstructionScreen'}],
       options: {
         insertMenu: {
@@ -59,4 +65,18 @@ export const page = defineType({
       },
     }),
   ],
+  // The document list shows the internal name, which is what editors use to find
+  // a page.  The slug is shown alongside it to disambiguate similar names.
+  preview: {
+    select: {
+      title: 'name',
+      slug: 'slug.current',
+    },
+    prepare({title, slug}) {
+      return {
+        title: title || 'Untitled page',
+        subtitle: slug ? `/${slug}` : 'No slug set',
+      }
+    },
+  },
 })

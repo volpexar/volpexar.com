@@ -9,6 +9,8 @@ import {blockContent} from './objects/blockContent'
 import button from './objects/button'
 import {blockContentTextOnly} from './objects/blockContentTextOnly'
 import {underConstructionScreen} from './objects/underConstructionScreen'
+import {seo} from './objects/seo'
+import {siteSeo} from './objects/siteSeo'
 
 // Export an array of all the schema types.  This is used in the Sanity Studio configuration. https://www.sanity.io/docs/studio/schema-types
 
@@ -27,4 +29,6 @@ export const schemaTypes = [
   callToAction,
   underConstructionScreen,
   link,
+  seo,
+  siteSeo,
 ]

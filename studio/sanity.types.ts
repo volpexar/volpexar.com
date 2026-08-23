@@ -15,6 +15,43 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: ../sanity.schema.json
+export type SanityImageAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+}
+
+export type SiteSeo = {
+  _type: 'siteSeo'
+  title: string
+  description: string
+  ogImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+  visibility: 'index' | 'noIndex'
+}
+
+export type Seo = {
+  _type: 'seo'
+  title?: string
+  description?: string
+  ogImage?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+  visibility?: 'inherit' | 'noIndex'
+}
+
 export type PageReference = {
   _ref: string
   _type: 'reference'
@@ -36,13 +73,6 @@ export type Link = {
   page?: PageReference
   post?: PostReference
   openInNewTab?: boolean
-}
-
-export type SanityImageAssetReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
 }
 
 export type UnderConstructionScreen = {
@@ -170,15 +200,8 @@ export type Settings = {
     _type: 'block'
     _key: string
   }>
-  ogImage?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    alt?: string
-    metadataBase?: string
-    _type: 'image'
-  }
+  seo: SiteSeo
+  metadataBase?: string
 }
 
 export type SanityImageCrop = {
@@ -205,8 +228,7 @@ export type Page = {
   _rev: string
   name: string
   slug: Slug
-  heading: string
-  subheading?: string
+  seo: Seo
   pageBuilder?: Array<
     | ({
         _key: string
@@ -508,10 +530,12 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
+  | SanityImageAssetReference
+  | SiteSeo
+  | Seo
   | PageReference
   | PostReference
   | Link
-  | SanityImageAssetReference
   | UnderConstructionScreen
   | CallToAction
   | InfoSection
