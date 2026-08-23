@@ -23,9 +23,35 @@
 @theme {
   --shadow-layer: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
 
+  /* ---------------------------------------------------------------------
+     Volpexar palette.
+
+     Two tiers.  Primitives name a colour; semantic tokens name a *role* and
+     are defined in terms of a primitive.  Components should reference the
+     semantic tokens, so a palette change happens in one place here rather
+     than across every component that used the raw colour.
+
+     Every token generates matching Tailwind utilities, e.g. --color-surface-brand
+     gives bg-surface-brand, and --color-on-brand gives text-on-brand.
+     --------------------------------------------------------------------- */
+
+  /* Primitives */
+  --color-vermillion: #e14112;
+  --color-eerie-black: #1e1e1e;
+
+  /* Semantic: surfaces, and the foreground colour each one requires */
+  --color-surface-brand: var(--color-vermillion);
+  --color-on-brand: var(--color-white);
+
+  --color-surface-default: var(--color-white);
+  --color-on-default: var(--color-eerie-black);
+
+  --color-surface-inverse: var(--color-eerie-black);
+  --color-on-inverse: var(--color-white);
+
   --color-framework: #000;
   --color-black: #0b0b0b;
-  --color-white: #fff;
+  --color-white: #ffffff;
   --color-brand: #f50;
   --color-blue: #0052ff;
   --color-yellow: #cdea19;
