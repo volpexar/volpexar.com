@@ -12,7 +12,7 @@
     "deploy": "sanity deploy",
     "predev": "npm run sanity:typegen",
     "dev": "sanity dev",
-    "sanity:typegen": "sanity schema extract --enforce-required-fields --path ../sanity.schema.json && sanity typegen generate",
+    "sanity:typegen": "sanity schema extract --enforce-required-fields --force --path ../sanity.schema.json && sanity typegen generate",
     "start": "sanity start",
     "type-check": "tsc --noEmit"
   },
