@@ -45,6 +45,20 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
 }
 
+export type UnderConstructionScreen = {
+  _type: 'underConstructionScreen'
+  heading: string
+  body?: BlockContentTextOnly
+  logo?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+}
+
 export type CallToAction = {
   _type: 'callToAction'
   eyebrow?: string
@@ -200,6 +214,9 @@ export type Page = {
     | ({
         _key: string
       } & InfoSection)
+    | ({
+        _key: string
+      } & UnderConstructionScreen)
   >
 }
 
@@ -495,6 +512,7 @@ export type AllSanitySchemaTypes =
   | PostReference
   | Link
   | SanityImageAssetReference
+  | UnderConstructionScreen
   | CallToAction
   | InfoSection
   | BlockContentTextOnly
@@ -650,6 +668,20 @@ export type GetPageQueryResult = {
               markDefs: null
             }
         > | null
+      }
+    | {
+        _key: string
+        _type: 'underConstructionScreen'
+        heading: string
+        body?: BlockContentTextOnly
+        logo?: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          alt?: string
+          _type: 'image'
+        }
       }
   > | null
 } | null
