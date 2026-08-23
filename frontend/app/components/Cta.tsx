@@ -4,17 +4,9 @@ import ResolvedLink from '@/app/components/ResolvedLink'
 import PortableText from '@/app/components/PortableText'
 import Image from '@/app/components/SanityImage'
 import {stegaClean} from '@sanity/client/stega'
-import {ExtractPageBuilderType} from '@/sanity/lib/types'
+import type {PageBuilderSectionProps} from '@/sanity/lib/types'
 
-type CtaProps = {
-  block: ExtractPageBuilderType<'callToAction'>
-  index: number
-  // Needed if you want to createDataAttributes to do non-text overlays in Presentation (Visual Editing)
-  pageType: string
-  pageId: string
-}
-
-export default function CTA({block}: CtaProps) {
+export default function CTA({block}: PageBuilderSectionProps<'callToAction'>) {
   const {heading, eyebrow, body = [], button, image, theme, contentAlignment} = block
 
   const isDark = theme === 'dark'
