@@ -44,12 +44,11 @@ export type PageBuilderSectionComponents = {
   [T in PageBuilderSectionType]: PageBuilderSectionComponent<T>
 }
 
-// Represents a Link after GROQ dereferencing (page/post become slug strings)
+// Represents a Link after GROQ dereferencing (page becomes a slug string)
 export type DereferencedLink = {
   _type: 'link'
-  linkType?: 'href' | 'page' | 'post'
+  linkType?: 'href' | 'page'
   href?: string
   page?: string | null
-  post?: string | null
   openInNewTab?: boolean
 }

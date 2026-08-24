@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
+import {notFound} from 'next/navigation'
 
 import PageBuilderPage from '@/app/components/PageBuilder'
-import {PageOnboarding} from '@/app/components/Onboarding'
 import {sanityFetch} from '@/sanity/lib/live'
 import {homePageQuery, settingsQuery} from '@/sanity/lib/queries'
 import {resolveSeo} from '@/sanity/lib/seo'
@@ -25,11 +25,7 @@ export default async function Page() {
   const {data: page} = await sanityFetch({query: homePageQuery})
 
   if (!page?._id) {
-    return (
-      <div className="py-40">
-        <PageOnboarding />
-      </div>
-    )
+    notFound()
   }
 
   return <PageBuilderPage page={page as GetPageQueryResult} />

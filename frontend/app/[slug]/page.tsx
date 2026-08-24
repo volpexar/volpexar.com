@@ -1,10 +1,10 @@
 import type {Metadata} from 'next'
+import {notFound} from 'next/navigation'
 
 import PageBuilderPage from '@/app/components/PageBuilder'
 import {sanityFetch} from '@/sanity/lib/live'
 import {getPageQuery, pagesSlugs, settingsQuery} from '@/sanity/lib/queries'
 import {GetPageQueryResult} from '@/sanity.types'
-import {PageOnboarding} from '@/app/components/Onboarding'
 import {resolveSeo} from '@/sanity/lib/seo'
 
 type Props = {
@@ -52,11 +52,7 @@ export default async function Page(props: Props) {
   const [{data: page}] = await Promise.all([sanityFetch({query: getPageQuery, params})])
 
   if (!page?._id) {
-    return (
-      <div className="py-40">
-        <PageOnboarding />
-      </div>
-    )
+    notFound()
   }
 
   // All visible content comes from the page builder: the page document itself
