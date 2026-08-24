@@ -2,7 +2,7 @@ import './globals.css'
 
 import {SpeedInsights} from '@vercel/speed-insights/next'
 import type {Metadata} from 'next'
-import {Inter, IBM_Plex_Mono} from 'next/font/google'
+import {Nunito_Sans, Lora, Iosevka_Charon_Mono} from 'next/font/google'
 import {draftMode} from 'next/headers'
 import {VisualEditing} from 'next-sanity/visual-editing'
 import {Toaster} from 'sonner'
@@ -39,14 +39,20 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const inter = Inter({
-  variable: '--font-inter',
+const nunitoSans = Nunito_Sans({
+  variable: '--font-nunito-sans',
   subsets: ['latin'],
   display: 'swap',
 })
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: '--font-ibm-plex-mono',
+const lora = Lora({
+  variable: '--font-lora',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const iosevkaCharonMono = Iosevka_Charon_Mono({
+  variable: '--font-iosevka-charon-mono',
   weight: ['400'],
   subsets: ['latin'],
   display: 'swap',
@@ -56,7 +62,10 @@ export default async function RootLayout({children}: {children: React.ReactNode}
   const {isEnabled: isDraftMode} = await draftMode()
 
   return (
-    <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable} bg-white text-black`}>
+    <html
+      lang="en"
+      className={`${nunitoSans.variable} ${lora.variable} ${iosevkaCharonMono.variable} bg-white text-black`}
+    >
       <body>
         {/* The page builder renders every visible section, so the layout adds no
             chrome of its own: no header, no footer, no wrapper spacing. */}

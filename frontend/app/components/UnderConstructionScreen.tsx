@@ -34,7 +34,7 @@ export default function UnderConstructionScreen({
           /* `prose` brings its own colours, font size, line height and paragraph
              margins, so each is overridden here to match the design: 16px/1.5
              text, separated by 8px rather than prose's default 1.25em margins. */
-          className="mt-6 max-w-prose text-[1rem]/[1.5] prose-p:m-0 prose-p:pb-2 prose-p:text-[1rem]/[1.5] prose-p:text-balance prose-headings:text-on-brand prose-p:text-on-brand prose-strong:text-on-brand prose-a:text-on-brand"
+          className="mt-6 max-w-prose text-[1rem]/[1.5] prose-p:m-0 prose-p:pb-4 prose-p:text-[1rem]/[1.5] prose-p:text-balance prose-headings:text-on-brand prose-p:text-on-brand prose-strong:text-on-brand prose-a:text-on-brand"
         />
       )}
 
