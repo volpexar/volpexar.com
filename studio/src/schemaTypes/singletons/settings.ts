@@ -111,18 +111,8 @@ export const settings = defineType({
       name: 'metadataBase',
       title: 'Site URL',
       type: 'url',
-      description: (
-        <>
-          The canonical origin of this site, e.g. https://volpexar.com. Used to turn relative
-          metadata URLs into absolute ones.{' '}
-          <a
-            href="https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase"
-            rel="noreferrer noopener"
-          >
-            More information
-          </a>
-        </>
-      ),
+      description:
+        'The canonical origin of this site, e.g. https://volpexar.com. Used to turn relative metadata URLs into absolute ones. More information: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#metadatabase',
     }),
   ],
   preview: {
