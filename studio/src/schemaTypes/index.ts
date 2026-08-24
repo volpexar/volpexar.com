@@ -1,9 +1,6 @@
-import {person} from './documents/person'
 import {page} from './documents/page'
 import {settings} from './singletons/settings'
 import {link} from './objects/link'
-import {blockContent} from './objects/blockContent'
-import button from './objects/button'
 import {blockContentTextOnly} from './objects/blockContentTextOnly'
 import {underConstructionScreen} from './objects/underConstructionScreen'
 import {seo} from './objects/seo'
@@ -18,11 +15,8 @@ export const schemaTypes = [
   settings,
   // Documents
   page,
-  person,
   socialMediaProfile,
   // Objects
-  button,
-  blockContent,
   blockContentTextOnly,
   underConstructionScreen,
   link,

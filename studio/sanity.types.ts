@@ -125,60 +125,6 @@ export type BlockContentTextOnly = Array<{
   _key: string
 }>
 
-export type BlockContent = Array<
-  | {
-      children?: Array<{
-        marks?: Array<string>
-        text?: string
-        _type: 'span'
-        _key: string
-      }>
-      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
-      listItem?: 'bullet' | 'number'
-      markDefs?: Array<{
-        linkType?: 'href' | 'page'
-        href?: string
-        page?: PageReference
-        openInNewTab?: boolean
-        _type: 'link'
-        _key: string
-      }>
-      level?: number
-      _type: 'block'
-      _key: string
-    }
-  | {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-      _key: string
-    }
->
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop'
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot'
-  x: number
-  y: number
-  height: number
-  width: number
-}
-
-export type Button = {
-  _type: 'button'
-  buttonText?: string
-  link?: Link
-}
-
 export type SocialMediaProfile = {
   _id: string
   _type: 'socialMediaProfile'
@@ -188,24 +134,6 @@ export type SocialMediaProfile = {
   name: string
   handle: string
   url: string
-}
-
-export type Person = {
-  _id: string
-  _type: 'person'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  firstName: string
-  lastName: string
-  picture: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    alt?: string
-    _type: 'image'
-  }
 }
 
 export type Settings = {
@@ -238,6 +166,22 @@ export type Settings = {
   }>
   seo: SiteSeo
   metadataBase?: string
+}
+
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop'
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot'
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type Page = {
@@ -506,13 +450,10 @@ export type AllSanitySchemaTypes =
   | Link
   | UnderConstructionScreen
   | BlockContentTextOnly
-  | BlockContent
+  | SocialMediaProfile
+  | Settings
   | SanityImageCrop
   | SanityImageHotspot
-  | Button
-  | SocialMediaProfile
-  | Person
-  | Settings
   | Page
   | Slug
   | SanityAssistInstructionTask
