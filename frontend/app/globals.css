@@ -25,15 +25,15 @@
   --shadow-layer: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
 
   /* Typography.  Three typefaces, each with one job: Nunito Sans for body and
-     general text, Lora for headings, Iosevka Charon Mono for monospaced text.
+     general text, Lora for headings, Martian Mono for monospaced text.
 
      The variables themselves are set on <html> by next/font in app/layout.tsx;
      declaring them here is what makes Tailwind use them, so `font-sans` — the
      default for all text — resolves to Nunito Sans, `font-heading` to Lora and
-     `font-mono` to Iosevka Charon Mono. */
+     `font-mono` to Martian Mono. */
   --font-sans: var(--font-nunito-sans), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-lora), ui-serif, Georgia, serif;
-  --font-mono: var(--font-iosevka-charon-mono), ui-monospace, monospace;
+  --font-mono: var(--font-martian-mono), ui-monospace, monospace;
 
   /* ---------------------------------------------------------------------
      Volpexar palette.

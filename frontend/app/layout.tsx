@@ -2,7 +2,7 @@ import './globals.css'
 
 import {SpeedInsights} from '@vercel/speed-insights/next'
 import type {Metadata} from 'next'
-import {Nunito_Sans, Lora, Iosevka_Charon_Mono} from 'next/font/google'
+import {Nunito_Sans, Lora, Martian_Mono} from 'next/font/google'
 import {draftMode} from 'next/headers'
 import {VisualEditing} from 'next-sanity/visual-editing'
 import {Toaster} from 'sonner'
@@ -51,8 +51,8 @@ const lora = Lora({
   display: 'swap',
 })
 
-const iosevkaCharonMono = Iosevka_Charon_Mono({
-  variable: '--font-iosevka-charon-mono',
+const martianMono = Martian_Mono({
+  variable: '--font-martian-mono',
   weight: ['400'],
   subsets: ['latin'],
   display: 'swap',
@@ -64,7 +64,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
   return (
     <html
       lang="en"
-      className={`${nunitoSans.variable} ${lora.variable} ${iosevkaCharonMono.variable} bg-white text-black`}
+      className={`${nunitoSans.variable} ${lora.variable} ${martianMono.variable} bg-white text-black`}
     >
       <body>
         {/* The page builder renders every visible section, so the layout adds no
