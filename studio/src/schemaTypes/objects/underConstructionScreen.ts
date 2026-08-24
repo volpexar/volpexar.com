@@ -65,6 +65,25 @@ export const underConstructionScreen = defineType({
         }),
       ],
     }),
+    defineField({
+      name: 'socialMediaLinks',
+      title: 'Social media links',
+      type: 'array',
+      description:
+        'Optional calls to action linking to the client’s social media profiles, shown in the order listed here. Drag to reorder.',
+      group: 'contents',
+      of: [{type: 'socialMediaLink'}],
+      validation: (Rule) =>
+        Rule.custom((links?: {profile?: {_ref?: string}}[]) => {
+          if (!links) return true
+
+          // The same profile twice would render two identical calls to action.
+          const refs = links.map((link) => link?.profile?._ref).filter(Boolean)
+          const duplicated = refs.some((ref, index) => refs.indexOf(ref) !== index)
+
+          return duplicated ? 'Each social media profile can only be listed once.' : true
+        }),
+    }),
   ],
   preview: {
     select: {

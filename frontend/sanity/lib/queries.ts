@@ -52,6 +52,13 @@ const pageFields = /* groq */ `
         }
       }
     },
+    _type == "underConstructionScreen" => {
+      ...,
+      socialMediaLinks[]{
+        ...,
+        profile->{name, handle, url}
+      }
+    },
   },
 `
 

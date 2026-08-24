@@ -15,11 +15,31 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: ../sanity.schema.json
+export type SocialMediaProfileReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'socialMediaProfile'
+}
+
 export type SanityImageAssetReference = {
   _ref: string
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+}
+
+export type SocialMediaLink = {
+  _type: 'socialMediaLink'
+  profile: SocialMediaProfileReference
+  icon: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
 }
 
 export type SiteSeo = {
@@ -87,6 +107,11 @@ export type UnderConstructionScreen = {
     alt?: string
     _type: 'image'
   }
+  socialMediaLinks?: Array<
+    {
+      _key: string
+    } & SocialMediaLink
+  >
 }
 
 export type CallToAction = {
@@ -169,6 +194,17 @@ export type Button = {
   _type: 'button'
   buttonText?: string
   link?: Link
+}
+
+export type SocialMediaProfile = {
+  _id: string
+  _type: 'socialMediaProfile'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name: string
+  handle: string
+  url: string
 }
 
 export type Settings = {
@@ -530,7 +566,9 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
+  | SocialMediaProfileReference
   | SanityImageAssetReference
+  | SocialMediaLink
   | SiteSeo
   | Seo
   | PageReference
@@ -542,6 +580,7 @@ export type AllSanitySchemaTypes =
   | BlockContentTextOnly
   | BlockContent
   | Button
+  | SocialMediaProfile
   | Settings
   | SanityImageCrop
   | SanityImageHotspot
@@ -610,7 +649,7 @@ export type SettingsQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "callToAction" => {      ...,      button {        ...,          link {      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }      }    },    _type == "infoSection" => {      content[]{        ...,        markDefs[]{          ...,            _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }        }      }    },  },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "callToAction" => {      ...,      button {        ...,          link {      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }      }    },    _type == "infoSection" => {      content[]{        ...,        markDefs[]{          ...,            _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }        }      }    },    _type == "underConstructionScreen" => {      ...,      socialMediaLinks[]{        ...,        profile->{name, handle, url}      }    },  },  }
 export type GetPageQueryResult = {
   _id: string
   _type: 'page'
@@ -697,13 +736,30 @@ export type GetPageQueryResult = {
           alt?: string
           _type: 'image'
         }
+        socialMediaLinks: Array<{
+          _key: string
+          _type: 'socialMediaLink'
+          profile: {
+            name: string
+            handle: string
+            url: string
+          }
+          icon: {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            alt?: string
+            _type: 'image'
+          }
+        }> | null
       }
   > | null
 } | null
 
 // Source: sanity/lib/queries.ts
 // Variable: homePageQuery
-// Query: *[_type == 'page' && _id == 'homePage'][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "callToAction" => {      ...,      button {        ...,          link {      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }      }    },    _type == "infoSection" => {      content[]{        ...,        markDefs[]{          ...,            _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }        }      }    },  },  }
+// Query: *[_type == 'page' && _id == 'homePage'][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "callToAction" => {      ...,      button {        ...,          link {      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }      }    },    _type == "infoSection" => {      content[]{        ...,        markDefs[]{          ...,            _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }        }      }    },    _type == "underConstructionScreen" => {      ...,      socialMediaLinks[]{        ...,        profile->{name, handle, url}      }    },  },  }
 export type HomePageQueryResult = {
   _id: 'homePage'
   _type: 'page'
@@ -790,6 +846,23 @@ export type HomePageQueryResult = {
           alt?: string
           _type: 'image'
         }
+        socialMediaLinks: Array<{
+          _key: string
+          _type: 'socialMediaLink'
+          profile: {
+            name: string
+            handle: string
+            url: string
+          }
+          icon: {
+            asset?: SanityImageAssetReference
+            media?: unknown
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            alt?: string
+            _type: 'image'
+          }
+        }> | null
       }
   > | null
 } | null
@@ -958,8 +1031,8 @@ import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult
-    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "callToAction" => {\n      ...,\n      button {\n        ...,\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n      }\n    },\n    _type == "infoSection" => {\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n        }\n      }\n    },\n  },\n\n  }\n': GetPageQueryResult
-    '\n  *[_type == \'page\' && _id == \'homePage\'][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "callToAction" => {\n      ...,\n      button {\n        ...,\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n      }\n    },\n    _type == "infoSection" => {\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n        }\n      }\n    },\n  },\n\n  }\n': HomePageQueryResult
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "callToAction" => {\n      ...,\n      button {\n        ...,\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n      }\n    },\n    _type == "infoSection" => {\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n        }\n      }\n    },\n    _type == "underConstructionScreen" => {\n      ...,\n      socialMediaLinks[]{\n        ...,\n        profile->{name, handle, url}\n      }\n    },\n  },\n\n  }\n': GetPageQueryResult
+    '\n  *[_type == \'page\' && _id == \'homePage\'][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "callToAction" => {\n      ...,\n      button {\n        ...,\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n      }\n    },\n    _type == "infoSection" => {\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n        }\n      }\n    },\n    _type == "underConstructionScreen" => {\n      ...,\n      socialMediaLinks[]{\n        ...,\n        profile->{name, handle, url}\n      }\n    },\n  },\n\n  }\n': HomePageQueryResult
     '\n  *[(_type == "page" || _type == "post") && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
     '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult
     '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult

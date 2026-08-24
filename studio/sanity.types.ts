@@ -15,11 +15,31 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: ../sanity.schema.json
+export type SocialMediaProfileReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'socialMediaProfile'
+}
+
 export type SanityImageAssetReference = {
   _ref: string
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+}
+
+export type SocialMediaLink = {
+  _type: 'socialMediaLink'
+  profile: SocialMediaProfileReference
+  icon: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
 }
 
 export type SiteSeo = {
@@ -87,6 +107,11 @@ export type UnderConstructionScreen = {
     alt?: string
     _type: 'image'
   }
+  socialMediaLinks?: Array<
+    {
+      _key: string
+    } & SocialMediaLink
+  >
 }
 
 export type CallToAction = {
@@ -169,6 +194,17 @@ export type Button = {
   _type: 'button'
   buttonText?: string
   link?: Link
+}
+
+export type SocialMediaProfile = {
+  _id: string
+  _type: 'socialMediaProfile'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name: string
+  handle: string
+  url: string
 }
 
 export type Settings = {
@@ -530,7 +566,9 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
+  | SocialMediaProfileReference
   | SanityImageAssetReference
+  | SocialMediaLink
   | SiteSeo
   | Seo
   | PageReference
@@ -542,6 +580,7 @@ export type AllSanitySchemaTypes =
   | BlockContentTextOnly
   | BlockContent
   | Button
+  | SocialMediaProfile
   | Settings
   | SanityImageCrop
   | SanityImageHotspot

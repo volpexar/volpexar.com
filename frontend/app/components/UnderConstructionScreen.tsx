@@ -11,7 +11,7 @@ import type {PageBuilderSectionProps} from '@/sanity/lib/types'
 export default function UnderConstructionScreen({
   block,
 }: PageBuilderSectionProps<'underConstructionScreen'>) {
-  const {heading, body, logo} = block
+  const {heading, body, logo, socialMediaLinks} = block
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center bg-surface-brand px-6 py-20 text-center text-on-brand">
@@ -36,6 +36,36 @@ export default function UnderConstructionScreen({
              text, separated by 8px rather than prose's default 1.25em margins. */
           className="mt-6 max-w-prose text-[1rem]/[1.5] prose-p:m-0 prose-p:pb-2 prose-p:text-[1rem]/[1.5] prose-p:text-balance prose-headings:text-on-brand prose-p:text-on-brand prose-strong:text-on-brand prose-a:text-on-brand"
         />
+      )}
+
+      {socialMediaLinks && socialMediaLinks.length > 0 && (
+        <nav aria-label="Social media" className="mt-10">
+          <ul className="flex flex-wrap items-center justify-center gap-4">
+            {socialMediaLinks.map(({_key, profile, icon}) => (
+              <li key={_key}>
+                <a
+                  href={profile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-current/40 px-5 py-2.5 text-[1rem]/[1.5] transition-colors hover:bg-on-brand hover:text-surface-brand focus-visible:bg-on-brand focus-visible:text-surface-brand"
+                >
+                  {icon.asset?._ref && (
+                    <Image
+                      id={icon.asset._ref}
+                      alt={icon.alt || ''}
+                      width={24}
+                      crop={icon.crop}
+                      mode="contain"
+                      className="h-6 w-6 shrink-0"
+                    />
+                  )}
+                  {profile.name}
+                  <span className="sr-only"> ({profile.handle})</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       )}
     </section>
   )
