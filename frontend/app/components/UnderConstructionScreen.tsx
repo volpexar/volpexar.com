@@ -47,7 +47,9 @@ export default function UnderConstructionScreen({
                   href={profile.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-current/40 px-5 py-2.5 text-[1rem]/[1.5] transition-colors hover:bg-on-brand hover:text-surface-brand focus-visible:bg-on-brand focus-visible:text-surface-brand"
+                  /* The icons are white artwork, so the background only tints on
+                     hover rather than filling: a solid fill would hide them. */
+                  className="inline-flex items-center gap-2 rounded-full border border-current/40 px-5 py-2.5 text-[1rem]/[1.5] transition-colors hover:bg-on-brand/20 focus-visible:bg-on-brand/20"
                 >
                   {icon.asset?._ref && (
                     <Image
