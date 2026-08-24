@@ -106,30 +106,6 @@ export type UnderConstructionScreen = {
   >
 }
 
-export type CallToAction = {
-  _type: 'callToAction'
-  eyebrow?: string
-  heading: string
-  body?: BlockContentTextOnly
-  button?: Button
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  theme?: 'light' | 'dark'
-  contentAlignment?: 'textFirst' | 'imageFirst'
-}
-
-export type InfoSection = {
-  _type: 'infoSection'
-  heading?: string
-  subheading?: string
-  content?: BlockContent
-}
-
 export type BlockContentTextOnly = Array<{
   children?: Array<{
     marks?: Array<string>
@@ -181,6 +157,22 @@ export type BlockContent = Array<
     }
 >
 
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop'
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot'
+  x: number
+  y: number
+  height: number
+  width: number
+}
+
 export type Button = {
   _type: 'button'
   buttonText?: string
@@ -214,22 +206,6 @@ export type Person = {
     alt?: string
     _type: 'image'
   }
-}
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop'
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot'
-  x: number
-  y: number
-  height: number
-  width: number
 }
 
 export type Settings = {
@@ -274,15 +250,9 @@ export type Page = {
   slug?: Slug
   seo: Seo
   pageBuilder?: Array<
-    | ({
-        _key: string
-      } & CallToAction)
-    | ({
-        _key: string
-      } & InfoSection)
-    | ({
-        _key: string
-      } & UnderConstructionScreen)
+    {
+      _key: string
+    } & UnderConstructionScreen
   >
 }
 
@@ -535,15 +505,13 @@ export type AllSanitySchemaTypes =
   | PageReference
   | Link
   | UnderConstructionScreen
-  | CallToAction
-  | InfoSection
   | BlockContentTextOnly
   | BlockContent
+  | SanityImageCrop
+  | SanityImageHotspot
   | Button
   | SocialMediaProfile
   | Person
-  | SanityImageCrop
-  | SanityImageHotspot
   | Settings
   | Page
   | Slug

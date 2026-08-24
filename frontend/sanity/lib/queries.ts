@@ -2,19 +2,6 @@ import {defineQuery} from 'next-sanity'
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`)
 
-const linkReference = /* groq */ `
-  _type == "link" => {
-    "page": page->slug.current
-  }
-`
-
-const linkFields = /* groq */ `
-  link {
-      ...,
-      ${linkReference}
-      }
-`
-
 // The shared projection for a page document, used both for pages addressed by
 // slug and for the home page, which is addressed by its fixed document ID.
 const pageFields = /* groq */ `
@@ -24,22 +11,6 @@ const pageFields = /* groq */ `
   seo,
   "pageBuilder": pageBuilder[]{
     ...,
-    _type == "callToAction" => {
-      ...,
-      button {
-        ...,
-        ${linkFields}
-      }
-    },
-    _type == "infoSection" => {
-      content[]{
-        ...,
-        markDefs[]{
-          ...,
-          ${linkReference}
-        }
-      }
-    },
     _type == "underConstructionScreen" => {
       ...,
       socialMediaLinks[]{

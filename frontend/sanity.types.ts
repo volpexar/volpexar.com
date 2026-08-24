@@ -106,30 +106,6 @@ export type UnderConstructionScreen = {
   >
 }
 
-export type CallToAction = {
-  _type: 'callToAction'
-  eyebrow?: string
-  heading: string
-  body?: BlockContentTextOnly
-  button?: Button
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  theme?: 'light' | 'dark'
-  contentAlignment?: 'textFirst' | 'imageFirst'
-}
-
-export type InfoSection = {
-  _type: 'infoSection'
-  heading?: string
-  subheading?: string
-  content?: BlockContent
-}
-
 export type BlockContentTextOnly = Array<{
   children?: Array<{
     marks?: Array<string>
@@ -181,6 +157,22 @@ export type BlockContent = Array<
     }
 >
 
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop'
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot'
+  x: number
+  y: number
+  height: number
+  width: number
+}
+
 export type Button = {
   _type: 'button'
   buttonText?: string
@@ -214,22 +206,6 @@ export type Person = {
     alt?: string
     _type: 'image'
   }
-}
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop'
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot'
-  x: number
-  y: number
-  height: number
-  width: number
 }
 
 export type Settings = {
@@ -274,15 +250,9 @@ export type Page = {
   slug?: Slug
   seo: Seo
   pageBuilder?: Array<
-    | ({
-        _key: string
-      } & CallToAction)
-    | ({
-        _key: string
-      } & InfoSection)
-    | ({
-        _key: string
-      } & UnderConstructionScreen)
+    {
+      _key: string
+    } & UnderConstructionScreen
   >
 }
 
@@ -535,15 +505,13 @@ export type AllSanitySchemaTypes =
   | PageReference
   | Link
   | UnderConstructionScreen
-  | CallToAction
-  | InfoSection
   | BlockContentTextOnly
   | BlockContent
+  | SanityImageCrop
+  | SanityImageHotspot
   | Button
   | SocialMediaProfile
   | Person
-  | SanityImageCrop
-  | SanityImageHotspot
   | Settings
   | Page
   | Slug
@@ -606,218 +574,84 @@ export type SettingsQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "callToAction" => {      ...,      button {        ...,          link {      ...,        _type == "link" => {    "page": page->slug.current  }      }      }    },    _type == "infoSection" => {      content[]{        ...,        markDefs[]{          ...,            _type == "link" => {    "page": page->slug.current  }        }      }    },    _type == "underConstructionScreen" => {      ...,      socialMediaLinks[]{        ...,        profile->{name, handle, url}      }    },  },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "underConstructionScreen" => {      ...,      socialMediaLinks[]{        ...,        profile->{name, handle, url}      }    },  },  }
 export type GetPageQueryResult = {
   _id: string
   _type: 'page'
   slug: Slug | null
   seo: Seo
-  pageBuilder: Array<
-    | {
-        _key: string
-        _type: 'callToAction'
-        eyebrow?: string
-        heading: string
-        body?: BlockContentTextOnly
-        button: {
-          _type: 'button'
-          buttonText?: string
-          link: {
-            _type: 'link'
-            linkType?: 'href' | 'page'
-            href?: string
-            page: string | null
-            openInNewTab?: boolean
-          } | null
-        } | null
-        image?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        }
-        theme?: 'dark' | 'light'
-        contentAlignment?: 'imageFirst' | 'textFirst'
+  pageBuilder: Array<{
+    _key: string
+    _type: 'underConstructionScreen'
+    heading: string
+    body?: BlockContentTextOnly
+    logo?: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+    socialMediaLinks: Array<{
+      _key: string
+      _type: 'socialMediaLink'
+      profile: {
+        name: string
+        handle: string
+        url: string
       }
-    | {
-        _key: string
-        _type: 'infoSection'
-        heading?: string
-        subheading?: string
-        content: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-              listItem?: 'bullet' | 'number'
-              markDefs: Array<{
-                linkType?: 'href' | 'page'
-                href?: string
-                page: string | null
-                openInNewTab?: boolean
-                _type: 'link'
-                _key: string
-              }> | null
-              level?: number
-              _type: 'block'
-              _key: string
-            }
-          | {
-              asset?: SanityImageAssetReference
-              media?: unknown
-              hotspot?: SanityImageHotspot
-              crop?: SanityImageCrop
-              _type: 'image'
-              _key: string
-              markDefs: null
-            }
-        > | null
+      icon: {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt?: string
+        _type: 'image'
       }
-    | {
-        _key: string
-        _type: 'underConstructionScreen'
-        heading: string
-        body?: BlockContentTextOnly
-        logo?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          alt?: string
-          _type: 'image'
-        }
-        socialMediaLinks: Array<{
-          _key: string
-          _type: 'socialMediaLink'
-          profile: {
-            name: string
-            handle: string
-            url: string
-          }
-          icon: {
-            asset?: SanityImageAssetReference
-            media?: unknown
-            hotspot?: SanityImageHotspot
-            crop?: SanityImageCrop
-            alt?: string
-            _type: 'image'
-          }
-        }> | null
-      }
-  > | null
+    }> | null
+  }> | null
 } | null
 
 // Source: sanity/lib/queries.ts
 // Variable: homePageQuery
-// Query: *[_type == 'page' && _id == 'homePage'][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "callToAction" => {      ...,      button {        ...,          link {      ...,        _type == "link" => {    "page": page->slug.current  }      }      }    },    _type == "infoSection" => {      content[]{        ...,        markDefs[]{          ...,            _type == "link" => {    "page": page->slug.current  }        }      }    },    _type == "underConstructionScreen" => {      ...,      socialMediaLinks[]{        ...,        profile->{name, handle, url}      }    },  },  }
+// Query: *[_type == 'page' && _id == 'homePage'][0]{      _id,  _type,  slug,  seo,  "pageBuilder": pageBuilder[]{    ...,    _type == "underConstructionScreen" => {      ...,      socialMediaLinks[]{        ...,        profile->{name, handle, url}      }    },  },  }
 export type HomePageQueryResult = {
   _id: 'homePage'
   _type: 'page'
   slug: Slug | null
   seo: Seo
-  pageBuilder: Array<
-    | {
-        _key: string
-        _type: 'callToAction'
-        eyebrow?: string
-        heading: string
-        body?: BlockContentTextOnly
-        button: {
-          _type: 'button'
-          buttonText?: string
-          link: {
-            _type: 'link'
-            linkType?: 'href' | 'page'
-            href?: string
-            page: string | null
-            openInNewTab?: boolean
-          } | null
-        } | null
-        image?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        }
-        theme?: 'dark' | 'light'
-        contentAlignment?: 'imageFirst' | 'textFirst'
+  pageBuilder: Array<{
+    _key: string
+    _type: 'underConstructionScreen'
+    heading: string
+    body?: BlockContentTextOnly
+    logo?: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+    socialMediaLinks: Array<{
+      _key: string
+      _type: 'socialMediaLink'
+      profile: {
+        name: string
+        handle: string
+        url: string
       }
-    | {
-        _key: string
-        _type: 'infoSection'
-        heading?: string
-        subheading?: string
-        content: Array<
-          | {
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'normal'
-              listItem?: 'bullet' | 'number'
-              markDefs: Array<{
-                linkType?: 'href' | 'page'
-                href?: string
-                page: string | null
-                openInNewTab?: boolean
-                _type: 'link'
-                _key: string
-              }> | null
-              level?: number
-              _type: 'block'
-              _key: string
-            }
-          | {
-              asset?: SanityImageAssetReference
-              media?: unknown
-              hotspot?: SanityImageHotspot
-              crop?: SanityImageCrop
-              _type: 'image'
-              _key: string
-              markDefs: null
-            }
-        > | null
+      icon: {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt?: string
+        _type: 'image'
       }
-    | {
-        _key: string
-        _type: 'underConstructionScreen'
-        heading: string
-        body?: BlockContentTextOnly
-        logo?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          alt?: string
-          _type: 'image'
-        }
-        socialMediaLinks: Array<{
-          _key: string
-          _type: 'socialMediaLink'
-          profile: {
-            name: string
-            handle: string
-            url: string
-          }
-          icon: {
-            asset?: SanityImageAssetReference
-            media?: unknown
-            hotspot?: SanityImageHotspot
-            crop?: SanityImageCrop
-            alt?: string
-            _type: 'image'
-          }
-        }> | null
-      }
-  > | null
+    }> | null
+  }> | null
 } | null
 
 // Source: sanity/lib/queries.ts
@@ -841,8 +675,8 @@ import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "settings"][0]': SettingsQueryResult
-    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "callToAction" => {\n      ...,\n      button {\n        ...,\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current\n  }\n\n      }\n\n      }\n    },\n    _type == "infoSection" => {\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == "link" => {\n    "page": page->slug.current\n  }\n\n        }\n      }\n    },\n    _type == "underConstructionScreen" => {\n      ...,\n      socialMediaLinks[]{\n        ...,\n        profile->{name, handle, url}\n      }\n    },\n  },\n\n  }\n': GetPageQueryResult
-    '\n  *[_type == \'page\' && _id == \'homePage\'][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "callToAction" => {\n      ...,\n      button {\n        ...,\n        \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current\n  }\n\n      }\n\n      }\n    },\n    _type == "infoSection" => {\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          \n  _type == "link" => {\n    "page": page->slug.current\n  }\n\n        }\n      }\n    },\n    _type == "underConstructionScreen" => {\n      ...,\n      socialMediaLinks[]{\n        ...,\n        profile->{name, handle, url}\n      }\n    },\n  },\n\n  }\n': HomePageQueryResult
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "underConstructionScreen" => {\n      ...,\n      socialMediaLinks[]{\n        ...,\n        profile->{name, handle, url}\n      }\n    },\n  },\n\n  }\n': GetPageQueryResult
+    '\n  *[_type == \'page\' && _id == \'homePage\'][0]{\n    \n  _id,\n  _type,\n  slug,\n  seo,\n  "pageBuilder": pageBuilder[]{\n    ...,\n    _type == "underConstructionScreen" => {\n      ...,\n      socialMediaLinks[]{\n        ...,\n        profile->{name, handle, url}\n      }\n    },\n  },\n\n  }\n': HomePageQueryResult
     '\n  *[_type == "page" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
   }

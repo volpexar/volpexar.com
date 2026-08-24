@@ -1,5 +1,3 @@
-import Cta from '@/app/components/Cta'
-import InfoSection from '@/app/components/InfoSection'
 import UnderConstructionScreen from '@/app/components/UnderConstructionScreen'
 import {dataAttr} from '@/sanity/lib/utils'
 import type {
@@ -18,8 +16,6 @@ import type {
  * registered under.
  */
 const sectionComponents: PageBuilderSectionComponents = {
-  callToAction: Cta,
-  infoSection: InfoSection,
   underConstructionScreen: UnderConstructionScreen,
 }
 

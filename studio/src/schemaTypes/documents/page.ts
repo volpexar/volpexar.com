@@ -66,7 +66,7 @@ export const page = defineType({
       title: 'Page builder',
       type: 'array',
       description: 'All visible content on this page, section by section.',
-      of: [{type: 'callToAction'}, {type: 'infoSection'}, {type: 'underConstructionScreen'}],
+      of: [{type: 'underConstructionScreen'}],
       options: {
         insertMenu: {
           // Configure the "Add Item" menu to display a thumbnail preview of the content type. https://www.sanity.io/docs/studio/array-type#efb1fe03459d

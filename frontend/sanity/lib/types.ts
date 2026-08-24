@@ -14,8 +14,8 @@ export type ExtractPageBuilderType<T extends PageBuilderSectionType> = Extract<
  * The props every section component receives.
  *
  * `block` is narrowed to the one section type the component handles, so a
- * component written for `callToAction` cannot be registered against
- * `infoSection`: see `sectionComponents` in app/components/BlockRenderer.tsx.
+ * component written for one section type cannot be registered against
+ * another: see `sectionComponents` in app/components/BlockRenderer.tsx.
  *
  * `pageId` and `pageType` are only needed to build data attributes for non-text
  * overlays in Presentation (Visual Editing).

@@ -1,7 +1,5 @@
 import {person} from './documents/person'
 import {page} from './documents/page'
-import {callToAction} from './objects/callToAction'
-import {infoSection} from './objects/infoSection'
 import {settings} from './singletons/settings'
 import {link} from './objects/link'
 import {blockContent} from './objects/blockContent'
@@ -26,8 +24,6 @@ export const schemaTypes = [
   button,
   blockContent,
   blockContentTextOnly,
-  infoSection,
-  callToAction,
   underConstructionScreen,
   link,
   seo,
