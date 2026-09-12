@@ -21,7 +21,7 @@
     "format": "prettier --cache --write .",
     "lint": "npm run lint --workspace=frontend",
     "type-check": "npm run type-check --workspaces",
-    "prepare": "husky"
+    "prepare": "node .husky/install.mjs"
   },
   "prettier": "@sanity/prettier-config",
   "devDependencies": {
