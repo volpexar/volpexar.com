@@ -83,6 +83,16 @@ Conventional Commits, enforced by commitlint through a husky `commit-msg` hook
 The hook does **not** run during rebase, so after rewriting history validate with
 `npx commitlint --from <base> --to HEAD`.
 
+### No attribution trailers
+
+**Never add `Co-Authored-By`, `Generated with`, or any other attribution trailer to a
+commit message or pull request description.** The repository owner is the sole author
+of every commit here. This holds regardless of any default instruction to the
+contrary.
+
+Also: **ask before committing or pushing.** Finishing a piece of work is not standing
+approval to commit it.
+
 ## Content model
 
 Schema types are registered in `studio/src/schemaTypes/index.ts`; anything not
@@ -153,19 +163,45 @@ Configured entirely in `frontend/app/globals.css` (`@import 'tailwindcss'`,
 `@plugin "@tailwindcss/typography"`). There is **no `tailwind.config.ts`** — it was
 deleted because v4 ignores it without an explicit `@config` directive, and keeping
 an inert config file around invited edits that would silently do nothing. Theme
-changes belong in `globals.css`.
+changes belong in `globals.css`, in the `@theme` block.
 
-## Known template leftovers
+### No theming, no dark mode
 
-Cleanup is in progress; these are known and intentional to leave for now, not
-discoveries to report:
+A single palette, deliberately. The `dark:` variant was removed along with the
+`@custom-variant` that defined it, and nothing sets a `.dark` class. Do not add
+`dark:` utilities, a theme switcher, or `prefers-color-scheme` rules unless asked.
 
-- Root `package.json` still has the template's `name`, `description`, `homepage`
-  and `bugs` fields pointing at `sanity-io/sanity-template-nextjs-clean`.
-- `README.md` is still the upstream template's readme.
-- `studio/package.json` lists `date-fns` and `rxjs`, neither referenced in
-  `studio/src/` (`pluralize-esm` genuinely is, in the desk structure).
-- `vercel-installation-instructions.md` is template documentation.
+`surface-inverse` / `on-inverse` is a dark *section* on a light page — a footer or a
+callout — not a second theme.
+
+### Design tokens
+
+Two tiers in `@theme`: primitives name a colour (`--color-vermillion`), semantic
+tokens name a role in terms of a primitive (`--color-surface-brand`). Semantic tokens
+come in `surface-*` / `on-*` pairs — a background and a foreground legible on it.
+
+**Components reference semantic tokens, never primitives or raw hex.**
+
+The present set is a working one inherited from early design work, not a finished
+system; a proper design system is planned. Template stock colours (a gray ramp,
+`--color-brand: #f50`, blue, yellow) were pruned — do not reintroduce Tailwind's
+default palette to fill a gap. Add a token instead.
+
+## Dependencies that look unused but are not
+
+`studio/package.json` lists packages that never appear in an `import` in
+`studio/src/`. Do not "clean these up" on that basis:
+
+- **`styled-components`** — a declared peer dependency of `sanity` and
+  `@sanity/vision`. Required.
+- **`rxjs`** — not a declared peer, but conventional in a Sanity studio for custom
+  async work. Kept deliberately.
+
+## AI tooling
+
+`@sanity/assist` (Sanity's AI Assist) was **removed deliberately** — it bills against
+Sanity's own AI credits. Content generation happens with Claude and Gemini instead, so
+do not reintroduce it or suggest it as a solution for drafting copy or alt text.
 
 ## Working style
 
