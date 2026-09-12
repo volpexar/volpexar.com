@@ -10,7 +10,7 @@ import {HOME_PAGE_ID} from '../schemaTypes/documents/page'
  * Learn more: https://www.sanity.io/docs/structure-builder-introduction
  */
 
-const DISABLED_TYPES = ['settings', 'assist.instruction.context']
+const DISABLED_TYPES = ['settings']
 
 const HOME_PAGE_IDS = [HOME_PAGE_ID, `drafts.${HOME_PAGE_ID}`]
 
@@ -26,7 +26,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
         .icon(HomeIcon)
         .child(S.document().schemaType('page').documentId(HOME_PAGE_ID).title('Home Page')),
       ...S.documentTypeListItems()
-        // Remove the "assist.instruction.context" and "settings" content  from the list of content types
+        // Remove the "settings" content from the list of content types
         .filter((listItem: any) => !DISABLED_TYPES.includes(listItem.getId()))
         // Pluralize the title of each document type.  This is not required but just an option to consider.
         .map((listItem) => {

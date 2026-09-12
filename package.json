@@ -1,17 +1,14 @@
 {
-  "name": "sanity-template-nextjs-clean",
-  "description": "Next.js + Sanity: A Powerful Website Starter with Real-time Visual Editing",
-  "keywords": [
-    "Sanity",
-    "Next.js",
-    "Headless CMS",
-    "Visual Editing",
-    "Live Content API (LCAPI)",
-    "Real-time"
-  ],
-  "homepage": "https://github.com/sanity-io/sanity-template-nextjs-clean#readme",
+  "name": "volpexar.com",
+  "private": true,
+  "description": "The Volpexar website: a Next.js frontend with content managed in Sanity",
+  "homepage": "https://github.com/volpexar/volpexar.com#readme",
   "bugs": {
-    "url": "https://github.com/sanity-io/sanity-template-nextjs-clean/issues"
+    "url": "https://github.com/volpexar/volpexar.com/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volpexar/volpexar.com.git"
   },
   "workspaces": [
     "studio",
