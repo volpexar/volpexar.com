@@ -40,7 +40,7 @@ export default function BlockRenderer({block, index, pageId, pageType}: BlockRen
   // when the Studio schema is ahead of the frontend.
   if (!Section) {
     return (
-      <div className="w-full bg-gray-100 text-center text-gray-500 p-20 rounded">
+      <div className="w-full bg-surface-muted text-center text-on-muted p-20 rounded">
         A &ldquo;{block._type}&rdquo; block hasn&apos;t been created
       </div>
     )

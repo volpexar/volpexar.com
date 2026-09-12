@@ -19,11 +19,7 @@
   padding: 0 2rem;
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
-
 @theme {
-  --shadow-layer: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
-
   /* Typography.  Three typefaces, each with one job: Nunito Sans for body and
      general text, Lora for headings, Martian Mono for monospaced text.
 
@@ -47,11 +43,18 @@
      gives bg-surface-brand, and --color-on-brand gives text-on-brand.
      --------------------------------------------------------------------- */
 
-  /* Primitives */
+  /* Primitives.  Raw colours, named for what they are.  Add to this tier when the
+     design introduces a genuinely new colour; otherwise reach for a semantic token
+     below. */
   --color-vermillion: #e14112;
   --color-eerie-black: #1e1e1e;
+  --color-white: #ffffff;
 
-  /* Semantic: surfaces, and the foreground colour each one requires */
+  /* Semantic: surfaces, and the foreground colour each one requires.
+
+     These come in pairs.  `surface-*` is a background; `on-*` is the foreground
+     that is legible on it.  Using a pair together keeps contrast correct without
+     each component having to reason about it. */
   --color-surface-brand: var(--color-vermillion);
   --color-on-brand: var(--color-white);
 
@@ -61,23 +64,10 @@
   --color-surface-inverse: var(--color-eerie-black);
   --color-on-inverse: var(--color-white);
 
-  --color-framework: #000;
-  --color-black: #0b0b0b;
-  --color-white: #ffffff;
-  --color-brand: #f50;
-  --color-blue: #0052ff;
-  --color-yellow: #cdea19;
-  --color-gray-50: #f6f6f8;
-  --color-gray-100: #eeeef1;
-  --color-gray-200: #e3e4e8;
-  --color-gray-300: #bbbdc9;
-  --color-gray-400: #9499ad;
-  --color-gray-500: #727892;
-  --color-gray-600: #515870;
-  --color-gray-700: #383d51;
-  --color-gray-800: #252837;
-  --color-gray-900: #1b1d27;
-  --color-gray-950: #13141b;
+  /* Muted: low-emphasis surfaces and text, for states rather than content —
+     placeholders, disabled controls, editorial scaffolding. */
+  --color-surface-muted: #f1f0ef;
+  --color-on-muted: #6b6764;
 
   --default-transition-duration: 250ms;
 }

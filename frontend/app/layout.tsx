@@ -64,7 +64,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
   return (
     <html
       lang="en"
-      className={`${nunitoSans.variable} ${lora.variable} ${martianMono.variable} bg-white text-black`}
+      className={`${nunitoSans.variable} ${lora.variable} ${martianMono.variable} bg-surface-default text-on-default`}
     >
       <body>
         {/* The page builder renders every visible section, so the layout adds no
