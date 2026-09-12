@@ -12,7 +12,39 @@ still being stripped down to the parts this project actually uses.
   both generated and tracked, it conflicts on most branches that touch the schema.
   Resolve by regenerating it, never by hand-merging.
 
-Sanity project id is `wvcv9992`, dataset `production`.
+Sanity project id is `wvcv9992`. See Datasets below — there are two, and which one
+you are pointed at matters.
+
+## Datasets
+
+Two, and the split is the safety mechanism that keeps local work off the live site:
+
+| Dataset | Who reads it | Who writes it |
+| --- | --- | --- |
+| `production` | volpexar.com, and Vercel production builds | nobody locally, by design |
+| `development` | Vercel **preview** deployments, and all local work | you, freely |
+
+Both `frontend/.env.local` and `studio/.env` point at `development`, so the local
+Studio cannot reach live content. That is deliberate — do not "fix" it by switching
+either file to `production`.
+
+- **There is no per-document promotion.** Sanity's export/import is whole-dataset and
+  clobbers the target. Content built in `development` gets **re-authored by hand** in
+  `production` when it ships. Keep that in mind before generating bulk content in
+  the sandbox; every document is one somebody re-enters.
+- `production` was empty until 2026-09-12, when the contents of `development` were
+  exported and imported into it. Before that the live site served `development` — so
+  anything in git history referring to `production` as "the empty one" is stale.
+- Both datasets are **public** (free plan). Anything in either is readable by anyone
+  with the project id, drafts included. Do not put anything sensitive in a document.
+
+### Vercel environment variables are baked in at build time
+
+`NEXT_PUBLIC_*` values are inlined into the bundle by Next, not read per request.
+Changing one in the Vercel dashboard does nothing until a **new build** runs. A
+setting that appears to be ignored is almost always this — redeploy before
+debugging anything else. `NEXT_PUBLIC_SANITY_DATASET` is set per environment:
+`production` for Production, `development` for Preview.
 
 ## Requirements
 
@@ -55,6 +87,14 @@ Consequences worth knowing before debugging a confusing failure:
 - **Never hand-edit `frontend/sanity.types.ts`.** It is generated and
   prettier-ignored. Change the schema in `studio/src/schemaTypes/` or the GROQ in
   `frontend/sanity/lib/queries.ts`, then regenerate.
+- **Three files are generated and tracked**: `sanity.schema.json`,
+  `frontend/sanity.types.ts` and `studio/sanity.types.ts`. Removing a plugin that
+  contributes schema types leaves stale definitions in all three until something
+  regenerates them, so they drift silently and turn up as unexplained modifications
+  later. After any dependency or schema change, regenerate and commit them with it.
+- Generated files are written with LF while `core.autocrlf` normalises to CRLF, so
+  `git status` can show one as modified while `git diff` is empty. That is a phantom;
+  confirm with `git hash-object <file>` and clear it with `git checkout -- <file>`.
 - After changing a schema type or a query, run
   `npm run sanity:typegen --workspace=frontend` so types match the data.
 
@@ -82,6 +122,13 @@ Conventional Commits, enforced by commitlint through a husky `commit-msg` hook
 
 The hook does **not** run during rebase, so after rewriting history validate with
 `npx commitlint --from <base> --to HEAD`.
+
+Hooks are installed by `prepare`, which runs `.husky/install.mjs` rather than `husky`
+directly. npm runs `prepare` on every install including Vercel's `--omit=dev`, where
+husky is absent and a bare call fails the build with exit 127. The script exits early
+when `CI` is set. Note it checks for the variable's **presence**, not the string
+`'true'` that husky's own docs test for — Vercel sets `CI=1`, so the documented form
+does not catch it. Do not "correct" that back.
 
 ### No attribution trailers
 
@@ -138,7 +185,9 @@ Adding a new routable document type means updating both `resolveHref()` and
 Two separate targets:
 
 - **Frontend** — Vercel (`frontend/vercel.json`, framework preset `nextjs`).
-  Deploys from git; env vars live in the Vercel project, not in the repo.
+  Deploys from git; env vars live in the Vercel project, not in the repo. A push to
+  `main` deploys to production; any other branch gets a preview URL reading the
+  `development` dataset. See the build-time inlining note under Datasets.
 - **Studio** — deployed on demand with `npm run deploy --workspace=studio`
   (`sanity deploy`, host from `SANITY_STUDIO_STUDIO_HOST`). It does **not** ship
   with the frontend, so a schema change is not live in the hosted Studio until this
@@ -151,8 +200,10 @@ Each workspace has its own env file and its own prefix — they are not shared.
 - `frontend/.env.local` — `NEXT_PUBLIC_SANITY_*`, plus `SANITY_API_READ_TOKEN`.
 - `studio/.env` — `SANITY_STUDIO_*`.
 
-Both are gitignored; `.env.example` in each is the contract. `frontend/sanity/lib/api.ts`
-asserts the required vars at import time, so a missing one fails loudly at startup.
+Both are gitignored; `.env.example` in each is the contract, and both default to the
+`development` dataset. `frontend/sanity/lib/api.ts` asserts the required vars at
+import time, so a missing one fails loudly at startup — `NEXT_PUBLIC_SANITY_DATASET`
+has no fallback value.
 
 Sanity tokens are secrets: read them from the environment, never commit one and
 never paste one into a config file.

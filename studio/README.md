@@ -4,7 +4,11 @@ The Sanity Studio for volpexar.com: where the site's content is written, reviewe
 published. See the [repository README](../README.md) for setup; this file covers the
 Studio itself.
 
-Sanity Studio v5, connected to project `wvcv9992`, dataset `production`.
+Sanity Studio v5, connected to project `wvcv9992`.
+
+The project has two datasets: `production`, which the live site serves, and
+`development`, the sandbox. `studio/.env` points at `development`, so local edits
+cannot reach volpexar.com — see [CLAUDE.md](../CLAUDE.md) for the full split.
 
 ## Running
 
