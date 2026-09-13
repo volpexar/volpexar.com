@@ -40,15 +40,22 @@ This split is what keeps a deploy from ever shipping a Studio pointed at the san
 `sanity deploy` cannot read `.env.development`, whatever the current shell says.
 
 **Preview URL follows the Studio, not the dataset.** Presentation previews the
-frontend you are running, so a local Studio previews `localhost:3000` even when
-pointed at production data:
+frontend you are running, so a local Studio previews `localhost:3000` whichever
+dataset it is pointed at.
+
+To work against live content locally, move **both** halves together:
 
 ```shell
-SANITY_STUDIO_DATASET=production npm run dev:studio
+npm run dev:prod     # from the repository root
 ```
 
-That is the way to inspect live content against local frontend code. Note it is
-read-write — you are editing the live site's content.
+Overriding only one half breaks Presentation with a 401. It opens by writing a
+preview secret into the Studio's dataset and reading it back through the frontend's,
+so if those differ the secret is never found and the handshake fails — the preview
+pane shows "Unable to connect" rather than anything useful.
+
+Note this is read-write against the live site: anything saved changes volpexar.com.
+To only *read* production content, point the frontend at it and skip the Studio.
 
 ## Content model
 

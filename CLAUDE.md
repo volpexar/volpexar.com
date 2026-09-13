@@ -63,6 +63,7 @@ Run from the repo root:
 | --- | --- |
 | `npm run dev` | Both servers in parallel — Next on :3000, Studio on :3333 |
 | `npm run dev:next` / `npm run dev:studio` | One at a time (see the typegen race below) |
+| `npm run dev:prod` | Both, against **live** `production` content — read-write |
 | `npm run type-check` | `tsc --noEmit` across both workspaces |
 | `npm run lint` | ESLint, frontend only — the studio workspace has no lint script |
 | `npm run format` | Prettier over everything, using `@sanity/prettier-config` |
@@ -213,9 +214,13 @@ Each workspace has its own env file and its own prefix — they are not shared.
 
   **Preview URL follows the Studio, not the dataset.** Presentation previews the
   frontend you are running, so local previews `localhost:3000` and hosted previews
-  `volpexar.com`. `SANITY_STUDIO_DATASET=production npm run dev:studio` inspects live
-  content against local frontend code, still previewing localhost — and writes to the
-  live site's content.
+  `volpexar.com`.
+
+  **Both halves must sit on the same dataset**, or Presentation fails with a 401: it
+  writes a preview secret into the Studio's dataset and reads it back through the
+  frontend's, so a mismatch means the secret is never found. `npm run dev:prod` moves
+  both to `production` at once — use it rather than overriding one side. It is
+  read-write against live content.
 
 Both are gitignored; `.env.example` in each is the contract, and both default to the
 `development` dataset. `frontend/sanity/lib/api.ts` asserts the required vars at

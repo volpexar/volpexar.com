@@ -58,12 +58,17 @@ All run from the repository root.
 
 | Command | Does |
 | --- | --- |
-| `npm run dev` | Runs both servers in parallel |
+| `npm run dev` | Runs both servers in parallel, against `development` |
 | `npm run dev:next` | Frontend only |
 | `npm run dev:studio` | Studio only |
+| `npm run dev:prod` | Both servers against the **live** `production` content |
 | `npm run type-check` | `tsc --noEmit` across both workspaces |
 | `npm run lint` | ESLint over the frontend |
 | `npm run format` | Prettier over the repository |
+
+`dev:prod` is for inspecting live content against local code. It is read-write — the
+Studio it opens edits volpexar.com — and it moves both halves together because
+Presentation fails if the Studio and the frontend disagree about the dataset.
 
 There is no test suite and no CI, so `type-check` and a local build are what catch
 mistakes before they ship.
