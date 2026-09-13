@@ -28,14 +28,20 @@ cd volpexar.com
 npm install
 ```
 
-Create the two environment files from their examples and fill in the values:
+Create the environment files from their examples and fill in the values:
 
 ```shell
 cp frontend/.env.example frontend/.env.local
 cp studio/.env.example studio/.env
+cp studio/.env.example studio/.env.development
+cp studio/.env.example studio/.env.production
 ```
 
-Both are gitignored. `SANITY_API_READ_TOKEN` is a secret — get one from
+The Studio needs all three: it loads `.env` plus one mode file, chosen by the command
+rather than by your shell. `studio/.env.example` says what belongs in each, and
+[studio/README.md](studio/README.md#environment) explains why they are split.
+
+All are gitignored. `SANITY_API_READ_TOKEN` is a secret — get one from
 [sanity.io/manage](https://www.sanity.io/manage) and never commit it.
 
 Then start both servers from the repository root:

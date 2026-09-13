@@ -7,8 +7,9 @@ Studio itself.
 Sanity Studio v5, connected to project `wvcv9992`.
 
 The project has two datasets: `production`, which the live site serves, and
-`development`, the sandbox. `studio/.env` points at `development`, so local edits
-cannot reach volpexar.com — see [CLAUDE.md](../CLAUDE.md) for the full split.
+`development`, the sandbox. A local Studio edits `development`; the hosted Studio
+edits `production` — see [Environment](#environment) below and
+[CLAUDE.md](../CLAUDE.md) for the full split.
 
 ## Running
 
@@ -19,8 +20,35 @@ npm run dev:studio   # Studio alone, on http://localhost:3333
 npm run dev          # Studio and the frontend together
 ```
 
-Requires `studio/.env` (copy `.env.example`). Sign in with an account that has access
-to the Sanity project.
+Requires the env files described below. Sign in with an account that has access to
+the Sanity project.
+
+## Environment
+
+Three gitignored files, all created by copying `.env.example`. Which ones load
+depends on the command, and the Studio CLI decides that — not your shell:
+
+| File | Loaded by | Holds |
+| --- | --- | --- |
+| `.env` | every command | `SANITY_STUDIO_PROJECT_ID`, `SANITY_STUDIO_STUDIO_HOST` |
+| `.env.development` | `sanity dev` | `development` dataset, preview `http://localhost:3000` |
+| `.env.production` | `sanity build`, `sanity deploy` | `production` dataset, preview `https://volpexar.com` |
+
+The mode file wins over `.env`, and a shell variable wins over both.
+
+This split is what keeps a deploy from ever shipping a Studio pointed at the sandbox:
+`sanity deploy` cannot read `.env.development`, whatever the current shell says.
+
+**Preview URL follows the Studio, not the dataset.** Presentation previews the
+frontend you are running, so a local Studio previews `localhost:3000` even when
+pointed at production data:
+
+```shell
+SANITY_STUDIO_DATASET=production npm run dev:studio
+```
+
+That is the way to inspect live content against local frontend code. Note it is
+read-write — you are editing the live site's content.
 
 ## Content model
 
@@ -109,4 +137,10 @@ npm run deploy       # or: npm run deploy --workspace=studio
 ```
 
 This deploys the hosted Studio, separately from the frontend. **A schema change is not
-live for editors until this is run**, even if the frontend has already shipped.
+live for editors until this is run**, even if the frontend has already shipped. The
+hosted Studio is a compiled bundle, so it keeps showing the schema it was built with —
+including document types that no longer exist in the code.
+
+It builds in production mode, so it takes its dataset and preview URL from
+`.env.production` and edits live content. Requires `SANITY_API_READ_TOKEN` in the
+Vercel production environment, or Presentation shows published content only.

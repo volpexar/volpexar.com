@@ -21,12 +21,13 @@ Two, and the split is the safety mechanism that keeps local work off the live si
 
 | Dataset | Who reads it | Who writes it |
 | --- | --- | --- |
-| `production` | volpexar.com, and Vercel production builds | nobody locally, by design |
+| `production` | volpexar.com, and Vercel production builds | editors, through the hosted Studio |
 | `development` | Vercel **preview** deployments, and all local work | you, freely |
 
-Both `frontend/.env.local` and `studio/.env` point at `development`, so the local
-Studio cannot reach live content. That is deliberate — do not "fix" it by switching
-either file to `production`.
+Local work runs against `development`: `frontend/.env.local` and
+`studio/.env.development` both point there. That is deliberate — do not "fix" it by
+switching either to `production`. The **hosted** Studio is the exception, and edits
+`production` by design; see Environment for how the two are kept apart.
 
 - **There is no per-document promotion.** Sanity's export/import is whole-dataset and
   clobbers the target. Content built in `development` gets **re-authored by hand** in
@@ -191,14 +192,30 @@ Two separate targets:
 - **Studio** — deployed on demand with `npm run deploy --workspace=studio`
   (`sanity deploy`, host from `SANITY_STUDIO_STUDIO_HOST`). It does **not** ship
   with the frontend, so a schema change is not live in the hosted Studio until this
-  is run.
+  is run. The hosted Studio is a compiled bundle carrying the schema it was built
+  with, so a stale one lists document types that no longer exist in the code — the
+  fix is always a redeploy, never a code change.
 
 ## Environment
 
 Each workspace has its own env file and its own prefix — they are not shared.
 
 - `frontend/.env.local` — `NEXT_PUBLIC_SANITY_*`, plus `SANITY_API_READ_TOKEN`.
-- `studio/.env` — `SANITY_STUDIO_*`.
+- `studio/.env`, `studio/.env.development`, `studio/.env.production` — `SANITY_STUDIO_*`,
+  split by mode. `sanity dev` loads `.env` + `.env.development`; `sanity build` and
+  `sanity deploy` load `.env` + `.env.production`. The mode file wins over `.env`, and
+  a shell variable wins over both.
+
+  This is what stops a deploy shipping a Studio pointed at the sandbox — `sanity deploy`
+  cannot read `.env.development`, whatever the shell holds. Do not consolidate them
+  back into one file, and do not add a dataset conditional to `sanity.config.ts`; the
+  CLI already makes the choice.
+
+  **Preview URL follows the Studio, not the dataset.** Presentation previews the
+  frontend you are running, so local previews `localhost:3000` and hosted previews
+  `volpexar.com`. `SANITY_STUDIO_DATASET=production npm run dev:studio` inspects live
+  content against local frontend code, still previewing localhost — and writes to the
+  live site's content.
 
 Both are gitignored; `.env.example` in each is the contract, and both default to the
 `development` dataset. `frontend/sanity/lib/api.ts` asserts the required vars at
