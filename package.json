@@ -15,9 +15,12 @@
     "frontend"
   ],
   "scripts": {
-    "dev": "npx run-p --print-label dev:*",
+    "dev": "npx run-p --print-label dev:next dev:studio",
     "dev:next": "npm run dev --workspace=frontend",
     "dev:studio": "npm run dev --workspace=studio",
+    "dev:prod": "npx run-p --print-label dev:*:prod",
+    "dev:next:prod": "cross-env NEXT_PUBLIC_SANITY_DATASET=production npm run dev:next",
+    "dev:studio:prod": "cross-env SANITY_STUDIO_DATASET=production npm run dev:studio",
     "format": "prettier --cache --write .",
     "lint": "npm run lint --workspace=frontend",
     "type-check": "npm run type-check --workspaces",
@@ -28,6 +31,7 @@
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
     "@sanity/prettier-config": "^3.0.0",
+    "cross-env": "10.1.0",
     "husky": "^9.1.7",
     "npm-run-all2": "^5.0.2",
     "prettier": "^3.8.1"
