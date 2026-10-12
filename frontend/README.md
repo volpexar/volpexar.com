@@ -127,3 +127,39 @@ while draft mode is active.
 This needs `SANITY_API_READ_TOKEN` set here, and `SANITY_STUDIO_PREVIEW_URL` in the
 Studio pointing at this app. Preview showing only published content usually means the
 token is missing rather than a caching problem.
+
+## Content updates
+
+Pages are prerendered and cached indefinitely, then regenerated one at a time when
+their content changes. A publish never needs a redeploy. Two things mark a page as
+needing regeneration:
+
+- **`<SanityLive>`**, rendered in `app/layout.tsx`. It runs in the visitor's browser,
+  listens to Sanity's live events and invalidates only the pages that used the changed
+  content. It is immediate, but it only fires while a browser is on the site.
+- **`app/api/revalidate/route.ts`**, called by a Sanity webhook on every create, update
+  and delete of a published document in `production`. It invalidates every page, so a
+  publish lands even when nobody has the site open.
+
+Either way nothing is rebuilt at the moment of the publish; a page is regenerated when
+it is next visited.
+
+The route verifies the webhook signature against `SANITY_REVALIDATE_SECRET` and answers
+500 when the variable is absent. Only the Vercel Production environment sets it: local
+work and preview deployments read `development`, which has no webhook.
+
+The webhook lives in the Sanity project settings, under API → Webhooks, not in this
+repository. To recreate it:
+
+| Field | Value |
+| --- | --- |
+| Name | Revalidate volpexar.com on publish |
+| URL | `https://volpexar.com/api/revalidate` |
+| Dataset | `production` |
+| Trigger on | Create, Update, Delete |
+| Filter | empty, so every document type counts |
+| Projection | `{_id, _type}` |
+| HTTP method | `POST` |
+| API version | `v2021-03-25` |
+| Trigger on drafts / all versions | off, which is what limits it to published content |
+| Secret | the same value as `SANITY_REVALIDATE_SECRET` in Vercel |

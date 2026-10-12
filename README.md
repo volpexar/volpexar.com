@@ -104,6 +104,13 @@ The two halves deploy separately.
 **Frontend** — deployed by Vercel from this repository, with the root directory set
 to `frontend`. Environment variables live in the Vercel project settings.
 
+Publishing content does not need a deploy. A webhook in the Sanity project calls
+`https://volpexar.com/api/revalidate` whenever a published document in `production`
+changes, and the site regenerates its pages. The webhook and its secret,
+`SANITY_REVALIDATE_SECRET` in Vercel's Production environment, are configured outside
+this repository; [frontend/README.md](frontend/README.md#content-updates) has the
+details.
+
 **Studio** — deployed on demand:
 
 ```shell

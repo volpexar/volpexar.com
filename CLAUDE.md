@@ -182,6 +182,35 @@ frontend is not actually running.
 Adding a new routable document type means updating both `resolveHref()` and
 `mainDocuments` in `studio/sanity.config.ts`, or Presentation cannot locate it.
 
+## Content updates and revalidation
+
+A publish never needs a redeploy, and a Vercel deploy hook is the wrong fix for stale
+content. Pages are prerendered, cached indefinitely (`next-sanity` sets
+`revalidate: false` in production) and regenerated individually once invalidated.
+Two things invalidate them:
+
+- `<SanityLive>` in `frontend/app/layout.tsx` — runs in the **visitor's browser**,
+  receives Sanity's live events and invalidates by sync tag, so only the affected
+  pages regenerate. Nothing happens if no browser is on the site when the publish
+  lands; the Presentation preview pane counts as one.
+- `frontend/app/api/revalidate/route.ts` — called by a Sanity webhook on create,
+  update and delete of published documents in `production`. A webhook carries a
+  document, not sync tags, so it invalidates every page with
+  `revalidatePath('/', 'layout')`. This is the guarantee that a publish lands, so
+  it must stay. Limiting `<SanityLive>` to draft mode, local work and preview
+  deployments is planned as separate work; until then it runs for every visitor.
+
+The webhook and its secret live outside git: the webhook in the Sanity project
+settings (its field values are recorded in `frontend/README.md`),
+`SANITY_REVALIDATE_SECRET` in Vercel's **Production** environment only. The
+route reads the secret per request and answers 500 without it, deliberately — unlike
+`token.ts` it must not throw at import time, because preview and local builds have no
+secret and no webhook.
+
+Stale content after a publish: check the webhook's delivery log in Sanity first. A 401
+means the two secrets differ; a 500 means the variable is missing from that
+deployment's environment, which on Vercel takes a new deployment to fix.
+
 ## Deployment
 
 Two separate targets:
@@ -202,6 +231,8 @@ Two separate targets:
 Each workspace has its own env file and its own prefix — they are not shared.
 
 - `frontend/.env.local` — `NEXT_PUBLIC_SANITY_*`, plus `SANITY_API_READ_TOKEN`.
+  `SANITY_REVALIDATE_SECRET` is not needed locally; see Content updates and
+  revalidation.
 - `studio/.env`, `studio/.env.development`, `studio/.env.production` — `SANITY_STUDIO_*`,
   split by mode. `sanity dev` loads `.env` + `.env.development`; `sanity build` and
   `sanity deploy` load `.env` + `.env.production`. The mode file wins over `.env`, and
