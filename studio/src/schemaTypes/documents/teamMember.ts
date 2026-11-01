@@ -1,15 +1,15 @@
 import {defineField, defineType} from 'sanity'
 import {UsersIcon} from '@sanity/icons'
-import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
 import {altText} from '../fields/altText'
+import {richTextBlock} from '../fields/richText'
 
 /**
  * Team Member document.  A person at Volpexar.
  *
  * Shown by sections that reference team members, and intended as the author of
- * future blog posts.  The order they are dragged into in the Studio is the
- * default order wherever the whole team is listed.
+ * future blog posts.  They have no order of their own: a section that shows
+ * team members lists them in the order it references them.
  */
 
 export const teamMember = defineType({
@@ -17,7 +17,6 @@ export const teamMember = defineType({
   title: 'Team Member',
   type: 'document',
   icon: UsersIcon,
-  orderings: [orderRankOrdering],
   fields: [
     defineField({
       name: 'name',
@@ -44,9 +43,9 @@ export const teamMember = defineType({
     defineField({
       name: 'bio',
       title: 'Bio',
-      type: 'blockContentTextOnly',
+      type: 'array',
+      of: [richTextBlock()],
     }),
-    orderRankField({type: 'teamMember'}),
   ],
   preview: {
     select: {

@@ -1,7 +1,6 @@
 import {CogIcon, HomeIcon} from '@sanity/icons'
 import type {StructureBuilder, StructureResolver} from 'sanity/structure'
 import pluralize from 'pluralize-esm'
-import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
 
 import {HOME_PAGE_ID} from '../schemaTypes/documents/page'
 
@@ -15,10 +14,7 @@ const DISABLED_TYPES = ['settings']
 
 const HOME_PAGE_IDS = [HOME_PAGE_ID, `drafts.${HOME_PAGE_ID}`]
 
-// Each of these needs an `orderRankField` in its schema.
-const ORDERABLE_TYPES = ['service', 'teamMember']
-
-export const structure: StructureResolver = (S: StructureBuilder, context) =>
+export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
     .title('Website Content')
     .items([
@@ -44,17 +40,6 @@ export const structure: StructureResolver = (S: StructureBuilder, context) =>
                 .filter('_type == $type && !(_id in $homePageIds)')
                 .params({type: 'page', homePageIds: HOME_PAGE_IDS}),
             )
-          }
-          // These are listed in a manual, drag-and-drop order, which is the
-          // default order wherever the site shows all of them.
-          if (ORDERABLE_TYPES.includes(listItem.getId() as string)) {
-            return orderableDocumentListDeskItem({
-              type: listItem.getId() as string,
-              title,
-              icon: context.schema.get(listItem.getId() as string)?.icon,
-              S,
-              context,
-            })
           }
           return listItem.title(title)
         }),

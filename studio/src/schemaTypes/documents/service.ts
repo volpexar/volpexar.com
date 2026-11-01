@@ -1,15 +1,15 @@
 import {defineField, defineType} from 'sanity'
 import {PackageIcon} from '@sanity/icons'
-import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
+import {richTextBlock} from '../fields/richText'
 import {uniqueName} from '../validation/uniqueName'
 
 /**
  * Service document.  One service Volpexar offers, e.g. branding or web design.
  *
  * Services have no URL of their own yet: they are shown by sections that
- * reference them, and referenced by projects.  The order they are dragged into
- * in the Studio is the default order wherever all services are listed.
+ * reference them, and referenced by projects.  They have no order of their own:
+ * a section lists them in the order it references them.
  */
 
 export const service = defineType({
@@ -17,7 +17,6 @@ export const service = defineType({
   title: 'Service',
   type: 'document',
   icon: PackageIcon,
-  orderings: [orderRankOrdering],
   fields: [
     defineField({
       name: 'name',
@@ -37,10 +36,10 @@ export const service = defineType({
     defineField({
       name: 'description',
       title: 'Description',
-      type: 'blockContentTextOnly',
+      type: 'array',
+      of: [richTextBlock()],
       description: 'The full description, for wherever the service is shown in detail.',
     }),
-    orderRankField({type: 'service'}),
   ],
   preview: {
     select: {

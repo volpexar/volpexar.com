@@ -106,6 +106,12 @@ export type UnderConstructionScreen = {
   >
 }
 
+export type PageBuilder = Array<
+  {
+    _key: string
+  } & UnderConstructionScreen
+>
+
 export type BlockContentTextOnly = Array<{
   children?: Array<{
     marks?: Array<string>
@@ -134,6 +140,204 @@ export type SocialMediaProfile = {
   name: string
   handle: string
   url: string
+}
+
+export type FaqEntry = {
+  _id: string
+  _type: 'faqEntry'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  question: string
+  answer: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<
+      {
+        _key: string
+      } & Link
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  keywords?: Array<string>
+}
+
+export type TeamMember = {
+  _id: string
+  _type: 'teamMember'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name: string
+  role: string
+  photo?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+  bio?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<
+      {
+        _key: string
+      } & Link
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop'
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot'
+  x: number
+  y: number
+  height: number
+  width: number
+}
+
+export type ClientReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'client'
+}
+
+export type ProjectReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'project'
+}
+
+export type Testimonial = {
+  _id: string
+  _type: 'testimonial'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  quote: string
+  author: string
+  authorRole?: string
+  client: ClientReference
+  projects?: Array<
+    {
+      _key: string
+    } & ProjectReference
+  >
+}
+
+export type Service = {
+  _id: string
+  _type: 'service'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name: string
+  summary: string
+  description?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<
+      {
+        _key: string
+      } & Link
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type ServiceReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'service'
+}
+
+export type Project = {
+  _id: string
+  _type: 'project'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+  client: ClientReference
+  services: Array<
+    {
+      _key: string
+    } & ServiceReference
+  >
+  date: string
+  coverImage: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+  summary: string
+  seo: Seo
+  pageBuilder?: PageBuilder
+}
+
+export type Client = {
+  _id: string
+  _type: 'client'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name: string
+  logo?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+  website?: string
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
 }
 
 export type Settings = {
@@ -168,22 +372,6 @@ export type Settings = {
   metadataBase?: string
 }
 
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop'
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot'
-  x: number
-  y: number
-  height: number
-  width: number
-}
-
 export type Page = {
   _id: string
   _type: 'page'
@@ -193,17 +381,7 @@ export type Page = {
   name?: string
   slug?: Slug
   seo: Seo
-  pageBuilder?: Array<
-    {
-      _key: string
-    } & UnderConstructionScreen
-  >
-}
-
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
+  pageBuilder?: PageBuilder
 }
 
 export type SanityImagePaletteSwatch = {
@@ -312,13 +490,23 @@ export type AllSanitySchemaTypes =
   | PageReference
   | Link
   | UnderConstructionScreen
+  | PageBuilder
   | BlockContentTextOnly
   | SocialMediaProfile
-  | Settings
+  | FaqEntry
+  | TeamMember
   | SanityImageCrop
   | SanityImageHotspot
-  | Page
+  | ClientReference
+  | ProjectReference
+  | Testimonial
+  | Service
+  | ServiceReference
+  | Project
+  | Client
   | Slug
+  | Settings
+  | Page
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions

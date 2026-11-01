@@ -31,16 +31,21 @@ export const link = defineType({
       name: 'href',
       title: 'URL',
       type: 'url',
+      description:
+        'A full address (https://…), an email or phone link (mailto:…, tel:…), or a section of the current page (#contacto).',
       hidden: ({parent}) => parent?.linkType !== 'href',
       validation: (Rule) =>
-        // Custom validation to ensure URL is provided if the link type is 'href'
-        Rule.custom((value, context) => {
-          const parent = context.parent as Link
-          if (parent?.linkType === 'href' && !value) {
-            return 'URL is required when Link Type is URL'
-          }
-          return true
-        }),
+        // Relative URLs are allowed so a link can target a section on the same page.
+        Rule.uri({allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel']}).custom(
+          // Custom validation to ensure URL is provided if the link type is 'href'
+          (value, context) => {
+            const parent = context.parent as Link
+            if (parent?.linkType === 'href' && !value) {
+              return 'URL is required when Link Type is URL'
+            }
+            return true
+          },
+        ),
     }),
     defineField({
       name: 'page',

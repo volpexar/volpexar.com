@@ -13,6 +13,7 @@ import {client} from './documents/client'
 import {project} from './documents/project'
 import {testimonial} from './documents/testimonial'
 import {teamMember} from './documents/teamMember'
+import {faqEntry} from './documents/faqEntry'
 
 // Export an array of all the schema types.  This is used in the Sanity Studio configuration. https://www.sanity.io/docs/studio/schema-types
 
@@ -26,6 +27,7 @@ export const schemaTypes = [
   client,
   testimonial,
   teamMember,
+  faqEntry,
   socialMediaProfile,
   // Objects
   blockContentTextOnly,
