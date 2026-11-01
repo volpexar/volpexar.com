@@ -64,21 +64,8 @@ export const page = defineType({
     defineField({
       name: 'pageBuilder',
       title: 'Page builder',
-      type: 'array',
+      type: 'pageBuilder',
       description: 'All visible content on this page, section by section.',
-      of: [{type: 'underConstructionScreen'}],
-      options: {
-        insertMenu: {
-          // Configure the "Add Item" menu to display a thumbnail preview of the content type. https://www.sanity.io/docs/studio/array-type#efb1fe03459d
-          views: [
-            {
-              name: 'grid',
-              previewImageUrl: (schemaTypeName) =>
-                `/static/page-builder-thumbnails/${schemaTypeName}.webp`,
-            },
-          ],
-        },
-      },
     }),
   ],
   // The document list shows the internal name, which is what editors use to find

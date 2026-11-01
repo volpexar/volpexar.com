@@ -1,5 +1,7 @@
 import {defineField, defineType} from 'sanity'
-import {UsersIcon} from '@sanity/icons'
+import {HashIcon} from '@sanity/icons'
+
+import {uniqueName} from '../validation/uniqueName'
 
 /**
  * Social Media Profile document.  One per platform the client is present on.
@@ -14,30 +16,14 @@ export const socialMediaProfile = defineType({
   name: 'socialMediaProfile',
   title: 'Social Media Profile',
   type: 'document',
-  icon: UsersIcon,
+  icon: HashIcon,
   fields: [
     defineField({
       name: 'name',
       title: 'Name',
       type: 'string',
       description: 'The platform this profile is on, e.g. Instagram, Facebook or WhatsApp.',
-      validation: (Rule) =>
-        Rule.required().custom(async (name, context) => {
-          if (!name) return true
-
-          const {getClient, document} = context
-          const client = getClient({apiVersion: '2024-01-01'})
-
-          // A document and its draft share an identity, so exclude both forms of
-          // the current document when looking for an existing name.
-          const id = document?._id.replace(/^drafts\./, '') || ''
-          const duplicate = await client.fetch<string | null>(
-            `*[_type == "socialMediaProfile" && lower(name) == lower($name) && !(_id in [$id, $draftId])][0].name`,
-            {name, id, draftId: `drafts.${id}`},
-          )
-
-          return duplicate ? `A profile named "${duplicate}" already exists.` : true
-        }),
+      validation: (Rule) => uniqueName(Rule, 'socialMediaProfile', 'profile'),
     }),
     defineField({
       name: 'handle',
