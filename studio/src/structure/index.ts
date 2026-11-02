@@ -16,7 +16,7 @@ const HOME_PAGE_IDS = [HOME_PAGE_ID, `drafts.${HOME_PAGE_ID}`]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
-    .title('Documentos')
+    .title('Tipos de documento')
     .items([
       // The home page is a single `page` document pinned to a fixed ID, served at
       // the site root.  It has no slug, so it cannot also be reached at /<slug>.
@@ -30,7 +30,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
         .filter((listItem: any) => !DISABLED_TYPES.includes(listItem.getId()))
         // Pluralize the title of each document type.  This is not required but just an option to consider.
         .map((listItem) => {
-          const title = pluralize(listItem.getTitle() as string)
+          const title = listItem.getTitle() as string
           // The home page is pinned above as its own singleton, so keep it out of
           // the regular "Pages" list rather than showing the same document twice.
           if (listItem.getId() === 'page') {
