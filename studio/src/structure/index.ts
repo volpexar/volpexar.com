@@ -16,7 +16,7 @@ const HOME_PAGE_IDS = [HOME_PAGE_ID, `drafts.${HOME_PAGE_ID}`]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
-    .title('Contenido del sitio web')
+    .title('Documentos')
     .items([
       // The home page is a single `page` document pinned to a fixed ID, served at
       // the site root.  It has no slug, so it cannot also be reached at /<slug>.

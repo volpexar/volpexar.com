@@ -9,6 +9,7 @@ import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './src/schemaTypes'
 import {structure} from './src/structure'
 import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
+import {esESLocale} from '@sanity/locale-es-es'
 import {
   presentationTool,
   defineDocuments,
@@ -55,9 +56,15 @@ export default defineConfig({
   projectId,
   dataset,
 
+  // Content Releases are not part of the current plan. Both flags are needed: with only `releases`
+  // off, the same tool stays visible as "Scheduled Drafts".
+  releases: {enabled: false},
+  scheduledDrafts: {enabled: false},
+
   plugins: [
     // Presentation tool configuration for Visual Editing
     presentationTool({
+      title: 'Previsualización',
       previewUrl: {
         origin: SANITY_STUDIO_PREVIEW_URL,
         previewMode: {
@@ -80,7 +87,7 @@ export default defineConfig({
         locations: {
           settings: defineLocations({
             locations: [homeLocation],
-            message: 'This document is used on all pages',
+            message: 'Este documento se usa en todas las páginas',
             tone: 'positive',
           }),
           page: defineLocations({
@@ -98,7 +105,7 @@ export default defineConfig({
               return {
                 locations: [
                   {
-                    title: doc?.name || 'Untitled',
+                    title: doc?.name || '(Sin nombre)',
                     href: resolveHref('page', doc?.slug)!,
                   },
                 ],
@@ -109,11 +116,16 @@ export default defineConfig({
       },
     }),
     structureTool({
+      title: 'Contenido',
       structure, // Custom studio structure configuration, imported from ./src/structure.ts
     }),
     // Additional plugins for enhanced functionality
     unsplashImageAsset(),
-    visionTool(),
+    visionTool({
+      title: 'Consultas'
+    }),
+    // Spanish UI for the Studio itself; schema titles are translated in the schema.
+    esESLocale(),
   ],
 
   // Schema configuration, imported from ./src/schemaTypes/index.ts
