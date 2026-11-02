@@ -1,5 +1,5 @@
 import {defineField, defineType} from 'sanity'
-import {DocumentIcon} from '@sanity/icons'
+import {ComposeSparklesIcon, DocumentIcon, TagsIcon} from '@sanity/icons'
 
 /**
  * The home page is a single `page` document pinned to this ID.  It is served at
@@ -21,6 +21,19 @@ export const page = defineType({
   title: 'Página',
   type: 'document',
   icon: DocumentIcon,
+  groups: [
+    {
+      name: 'contents',
+      title: 'Contenido',
+      icon: ComposeSparklesIcon,
+      default: true,
+    },
+    {
+      name: 'metadata',
+      title: 'Metadatos',
+      icon: TagsIcon,
+    },
+  ],
   fields: [
     defineField({
       name: 'name',
@@ -35,6 +48,7 @@ export const page = defineType({
         Rule.custom((value: string | undefined, context) =>
           isHomePage(context.document?._id) || value ? true : 'Required',
         ),
+      group: 'contents',
     }),
     defineField({
       name: 'slug',
@@ -51,6 +65,7 @@ export const page = defineType({
         source: 'name',
         maxLength: 96,
       },
+      group: 'contents',
     }),
     defineField({
       name: 'seo',
@@ -60,12 +75,14 @@ export const page = defineType({
       // An empty SEO title falls back to the site-wide title, which is what the
       // home page wants: it should render as just "Volpexar", not "Volpexar | Volpexar".
       validation: (Rule) => Rule.required(),
+      group: 'metadata',
     }),
     defineField({
       name: 'pageBuilder',
       title: 'Secciones',
       type: 'pageBuilder',
       description: 'Las secciones de contenido que componen esta página, en orden de aparición.',
+      group: 'contents',
     }),
   ],
   // The document list shows the internal name, which is what editors use to find
