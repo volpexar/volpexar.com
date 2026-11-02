@@ -11,30 +11,31 @@ import {richTextBlock} from '../fields/richText'
  * future blog posts.  They have no order of their own: a section that shows
  * team members lists them in the order it references them.
  */
-
 export const teamMember = defineType({
   name: 'teamMember',
-  title: 'Team Member',
+  title: 'Miembro del equipo',
   type: 'document',
   icon: UsersIcon,
   fields: [
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Nombre',
       type: 'string',
+      description: 'El nombre de la persona. Tal como debe mostrarse en el sitio.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'role',
-      title: 'Role',
+      title: 'Rol',
       type: 'string',
-      description: 'Their position at Volpexar, e.g. Creative Director.',
+      description: 'Su posición en Volpexar, por ejemplo, Director Creativo.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'photo',
-      title: 'Photo',
+      title: 'Foto',
       type: 'image',
+      description: 'Una foto de la persona. Tal como debe mostrarse en el sitio.',
       options: {
         hotspot: true,
       },
@@ -44,6 +45,7 @@ export const teamMember = defineType({
       name: 'bio',
       title: 'Bio',
       type: 'array',
+      description: 'Una breve descripción de la persona. Tal como debe mostrarse en el sitio.',
       of: [richTextBlock()],
     }),
   ],

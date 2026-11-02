@@ -24,17 +24,9 @@ export async function generateMetadata(): Promise<Metadata> {
     stega: false,
   })
 
-  let metadataBase: URL | undefined = undefined
-  try {
-    metadataBase = settings?.metadataBase ? new URL(settings.metadataBase) : undefined
-  } catch {
-    // ignore
-  }
-
   // Site-wide defaults. Individual routes override these per field; see
   // `resolveSeo` in sanity/lib/seo.ts.
   return {
-    metadataBase,
     ...resolveSeo(null, settings?.seo),
   }
 }

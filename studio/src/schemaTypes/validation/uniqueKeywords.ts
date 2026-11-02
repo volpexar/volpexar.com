@@ -13,5 +13,5 @@ export const uniqueKeywords = (keywords: string[] | undefined) => {
     if (seen.has(key)) duplicates.add(keyword.trim())
     seen.add(key)
   }
-  return duplicates.size ? `Repeated keywords: ${[...duplicates].join(', ')}` : true
+  return duplicates.size ? `Palabras clave duplicadas: ${[...duplicates].join(', ')}` : true
 }

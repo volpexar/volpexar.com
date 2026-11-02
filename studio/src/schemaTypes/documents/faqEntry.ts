@@ -16,19 +16,19 @@ import {uniqueKeywords} from '../validation/uniqueKeywords'
 
 export const faqEntry = defineType({
   name: 'faqEntry',
-  title: 'FAQ Entry',
+  title: 'Pregunta frecuente',
   type: 'document',
   icon: HelpCircleIcon,
   fields: [
     defineField({
       name: 'question',
-      title: 'Question',
+      title: 'Pregunta',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'answer',
-      title: 'Answer',
+      title: 'Respuesta',
       type: 'array',
       of: [
         richTextBlock({
@@ -41,10 +41,10 @@ export const faqEntry = defineType({
     }),
     defineField({
       name: 'keywords',
-      title: 'Search keywords',
+      title: 'Palabras clave de búsqueda',
       type: 'array',
       description:
-        'Extra words people might search for that are not in the question or answer, e.g. synonyms. Never shown on the site. Press Enter after each one.',
+        'Palabras extra que las personas podrían buscar y que no están en la pregunta o respuesta, por ejemplo, sinónimos. Nunca se muestran en el sitio.',
       of: [defineArrayMember({type: 'string'})],
       options: {
         layout: 'tags',

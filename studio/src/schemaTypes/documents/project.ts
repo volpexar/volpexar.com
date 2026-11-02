@@ -13,20 +13,21 @@ import {altText} from '../fields/altText'
 
 export const project = defineType({
   name: 'project',
-  title: 'Project',
+  title: 'Proyecto',
   type: 'document',
   icon: ProjectsIcon,
   orderings: [
     {
-      title: 'Date, newest first',
-      name: 'dateDesc',
-      by: [{field: 'date', direction: 'desc'}],
+      title: 'Fecha de inicio, más reciente primero',
+      name: 'startDateDesc',
+      by: [{field: 'startDate', direction: 'desc'}],
     },
   ],
   fields: [
     defineField({
-      name: 'title',
-      title: 'Title',
+      name: 'name',
+      title: 'Nombre',
+      description: 'Usado solamente en Sanity Studio para identificar el proyecto.',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -35,40 +36,54 @@ export const project = defineType({
       title: 'Slug',
       type: 'slug',
       description:
-        'The URL path for this project. For example, a slug of "rebranding" is served at /proyectos/rebranding.',
+        'El fragmento de URL que identifica a este proyecto. Por ejemplo, un slug "mi-proyecto" se sirve en la URL "volpexar.com/proyectos/mi-proyecto".',
       options: {
-        source: 'title',
+        source: 'name',
         maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'client',
-      title: 'Client',
+      title: 'Cliente',
       type: 'reference',
+      description: 'El cliente para el que se hizo este proyecto.',
       to: [{type: 'client'}],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'services',
-      title: 'Services',
+      title: 'Servicios',
       type: 'array',
-      description: 'Every service involved in this project.',
+      description: 'Cada servicio provisto por Volpexar en este proyecto.',
       of: [defineArrayMember({type: 'reference', to: [{type: 'service'}]})],
-      validation: (Rule) => Rule.required().min(1).unique(),
+      validation: (Rule) => Rule.required().unique(),
     }),
     defineField({
-      name: 'date',
-      title: 'Date',
+      name: 'startDate',
+      title: 'Fecha de inicio',
       type: 'date',
-      description: 'When the work was delivered. Used to sort projects, newest first.',
+      description: 'Cuando empezó el proyecto.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'endDate',
+      title: 'Fecha de fin',
+      type: 'date',
+      description: 'Cuando terminó el proyecto. Dejar vacío si el proyecto sigue en curso.',
+      validation: (Rule) =>
+        Rule.custom((endDate, context) => {
+          const startDate = (context.parent as {startDate?: string})?.startDate
+          return endDate && startDate && endDate < startDate
+            ? 'La fecha de fin no puede ser anterior a la de inicio.'
+            : true
+        }),
+    }),
+    defineField({
       name: 'coverImage',
-      title: 'Cover image',
+      title: 'Imagen de portada',
       type: 'image',
-      description: 'Represents the project wherever it is listed.',
+      description: 'Representa el proyecto dondequiera que se liste.',
       options: {
         hotspot: true,
       },
@@ -77,36 +92,41 @@ export const project = defineType({
     }),
     defineField({
       name: 'summary',
-      title: 'Summary',
+      title: 'Resumen',
       type: 'text',
       rows: 3,
-      description: 'A short description, shown on cards and in the projects hub.',
+      description: 'Un resumen breve del proyecto, usado en listados y tarjetas.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'seo',
       title: 'SEO',
       type: 'seo',
+      description: 'Configuración de SEO para la página de este proyecto.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'pageBuilder',
-      title: 'Page builder',
+      title: 'Secciones',
       type: 'pageBuilder',
-      description: "All visible content on this project's page, section by section.",
+      description: "Las secciones de contenido que componen esta página, en orden de aparición.",
     }),
   ],
   preview: {
     select: {
-      title: 'title',
+      name: 'name',
       client: 'client.name',
-      date: 'date',
+      startDate: 'startDate',
+      endDate: 'endDate',
       media: 'coverImage',
     },
-    prepare({title, client, date, media}) {
+    prepare({name, client, startDate, endDate, media}) {
+      const startYear = startDate?.slice(0, 4)
+      const endYear = endDate ? endDate.slice(0, 4) : 'en curso'
+      const period = startYear && (startYear === endYear ? startYear : `${startYear} - ${endYear}`)
       return {
-        title: title || 'Untitled project',
-        subtitle: [client, date?.slice(0, 4)].filter(Boolean).join(' · '),
+        title: `${client} · ${name || '(Proyecto sin nombre)'}`,
+        subtitle: period,
         media,
       }
     },

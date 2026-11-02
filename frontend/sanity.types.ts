@@ -46,7 +46,7 @@ export type SiteSeo = {
   _type: 'siteSeo'
   title: string
   description: string
-  ogImage?: {
+  ogImage: {
     asset?: SanityImageAssetReference
     media?: unknown
     hotspot?: SanityImageHotspot
@@ -229,13 +229,6 @@ export type ClientReference = {
   [internalGroqTypeReferenceTo]?: 'client'
 }
 
-export type ProjectReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'project'
-}
-
 export type Testimonial = {
   _id: string
   _type: 'testimonial'
@@ -244,13 +237,8 @@ export type Testimonial = {
   _rev: string
   quote: string
   author: string
-  authorRole?: string
+  authorRole: string
   client: ClientReference
-  projects?: Array<
-    {
-      _key: string
-    } & ProjectReference
-  >
 }
 
 export type Service = {
@@ -260,25 +248,6 @@ export type Service = {
   _updatedAt: string
   _rev: string
   name: string
-  summary: string
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<
-      {
-        _key: string
-      } & Link
-    >
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
 }
 
 export type ServiceReference = {
@@ -294,7 +263,7 @@ export type Project = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title: string
+  name: string
   slug: Slug
   client: ClientReference
   services: Array<
@@ -302,7 +271,8 @@ export type Project = {
       _key: string
     } & ServiceReference
   >
-  date: string
+  startDate: string
+  endDate?: string
   coverImage: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -340,38 +310,6 @@ export type Slug = {
   source?: string
 }
 
-export type Settings = {
-  _id: string
-  _type: 'settings'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      linkType?: 'href' | 'page'
-      href?: string
-      page?: PageReference
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
-  seo: SiteSeo
-  metadataBase?: string
-}
-
 export type Page = {
   _id: string
   _type: 'page'
@@ -382,6 +320,15 @@ export type Page = {
   slug?: Slug
   seo: Seo
   pageBuilder?: PageBuilder
+}
+
+export type Settings = {
+  _id: string
+  _type: 'settings'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  seo: SiteSeo
 }
 
 export type SanityImagePaletteSwatch = {
@@ -498,15 +445,14 @@ export type AllSanitySchemaTypes =
   | SanityImageCrop
   | SanityImageHotspot
   | ClientReference
-  | ProjectReference
   | Testimonial
   | Service
   | ServiceReference
   | Project
   | Client
   | Slug
-  | Settings
   | Page
+  | Settings
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -525,30 +471,7 @@ export type SettingsQueryResult = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title: string
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      linkType?: 'href' | 'page'
-      href?: string
-      page?: PageReference
-      openInNewTab?: boolean
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
   seo: SiteSeo
-  metadataBase?: string
 } | null
 
 // Source: sanity/lib/queries.ts

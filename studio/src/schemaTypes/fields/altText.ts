@@ -1,14 +1,14 @@
 import {defineField} from 'sanity'
 
 /**
- * Alternative text for an image field, required only once an image is chosen,
- * so an optional image can still be left empty.
+ * Alternative text for an image field, required only once an image is chosen, so an optional image can
+ * still be left empty.
  */
 export const altText = () =>
   defineField({
     name: 'alt',
-    title: 'Alternative text',
-    description: 'Describes the image for screen readers and search engines.',
+    title: 'Texto alternativo',
+    description: 'Describe la imagen para lectores de pantalla y motores de búsqueda.',
     type: 'string',
     validation: (Rule) =>
       Rule.custom((alt, context) => {

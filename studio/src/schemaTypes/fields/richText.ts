@@ -10,31 +10,31 @@ import {defineArrayMember} from 'sanity'
 
 const STYLES = {
   normal: {title: 'Normal', value: 'normal'},
-  h1: {title: 'Heading 1', value: 'h1'},
-  h2: {title: 'Heading 2', value: 'h2'},
-  h3: {title: 'Heading 3', value: 'h3'},
-  h4: {title: 'Heading 4', value: 'h4'},
-  h5: {title: 'Heading 5', value: 'h5'},
-  h6: {title: 'Heading 6', value: 'h6'},
-  blockquote: {title: 'Quote', value: 'blockquote'},
+  h1: {title: 'Encabezado 1', value: 'h1'},
+  h2: {title: 'Encabezado 2', value: 'h2'},
+  h3: {title: 'Encabezado 3', value: 'h3'},
+  h4: {title: 'Encabezado 4', value: 'h4'},
+  h5: {title: 'Encabezado 5', value: 'h5'},
+  h6: {title: 'Encabezado 6', value: 'h6'},
+  blockquote: {title: 'Cita', value: 'blockquote'},
 }
 
 const LISTS = {
-  bullet: {title: 'Bulleted list', value: 'bullet'},
-  number: {title: 'Numbered list', value: 'number'},
+  bullet: {title: 'Lista con viñetas', value: 'bullet'},
+  number: {title: 'Lista numerada', value: 'number'},
 }
 
 const DECORATORS = {
-  strong: {title: 'Bold', value: 'strong'},
-  em: {title: 'Italic', value: 'em'},
-  underline: {title: 'Underline', value: 'underline'},
-  'strike-through': {title: 'Strikethrough', value: 'strike-through'},
-  code: {title: 'Code', value: 'code'},
+  strong: {title: 'Negrita', value: 'strong'},
+  em: {title: 'Cursiva', value: 'em'},
+  underline: {title: 'Subrayado', value: 'underline'},
+  'strike-through': {title: 'Tachado', value: 'strike-through'},
+  code: {title: 'Código', value: 'code'},
 }
 
 const ANNOTATIONS = {
   // The shared `link` object: a URL or an internal page.
-  link: defineArrayMember({type: 'link'}),
+  link: defineArrayMember({type: 'link', title: 'Enlace'}),
 }
 
 type RichTextOptions = {

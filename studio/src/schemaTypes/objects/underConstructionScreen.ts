@@ -1,6 +1,8 @@
 import {defineField, defineType} from 'sanity'
 import {ComposeSparklesIcon, ImageIcon, LockIcon} from '@sanity/icons'
 
+import {altText} from '../fields/altText'
+
 /**
  * Under Construction Screen schema object.  A full-screen placeholder section used
  * while a site (or a single page) is still being built.
@@ -9,68 +11,55 @@ import {ComposeSparklesIcon, ImageIcon, LockIcon} from '@sanity/icons'
 
 export const underConstructionScreen = defineType({
   name: 'underConstructionScreen',
-  title: 'Under Construction Screen',
+  title: 'Pantalla de sitio en construcción',
   type: 'object',
   icon: LockIcon,
   groups: [
     {
       name: 'contents',
+      title: 'Contenido',
       icon: ComposeSparklesIcon,
       default: true,
     },
     {
       name: 'media',
+      title: 'Gráficos',
       icon: ImageIcon,
     },
   ],
   fields: [
     defineField({
       name: 'heading',
-      title: 'Heading',
+      title: 'Encabezado',
       type: 'string',
-      description: 'The main headline, e.g. "Under Construction".',
+      description: 'El título principal, por ejemplo, "En construcción".',
       validation: (Rule) => Rule.required(),
       group: 'contents',
     }),
     defineField({
       name: 'body',
-      title: 'Body',
+      title: 'Texto de apoyo',
       type: 'blockContentTextOnly',
-      description: 'Supporting text shown beneath the heading.',
+      description: 'Texto de apoyo mostrado debajo del encabezado.',
       group: 'contents',
     }),
     defineField({
       name: 'logo',
-      title: 'Logo',
+      title: 'Logotipo',
       type: 'image',
-      description: 'The logo variant to display on this screen.',
+      description: 'El logotipo que se muestra en esta pantalla.',
       options: {
         hotspot: true,
       },
       group: 'media',
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alternative text',
-          description: 'Important for accessibility and SEO.',
-          type: 'string',
-          validation: (Rule) =>
-            Rule.custom((alt, context) => {
-              const parent = context.parent as {asset?: {_ref?: string}}
-              if (parent?.asset?._ref && !alt) {
-                return 'Required'
-              }
-              return true
-            }),
-        }),
-      ],
+      fields: [altText()],
     }),
     defineField({
       name: 'socialMediaLinks',
-      title: 'Social media links',
+      title: 'Enlaces a redes sociales',
       type: 'array',
       description:
-        'Optional calls to action linking to the client’s social media profiles, shown in the order listed here. Drag to reorder.',
+        'Llamadas a la acción opcionales que enlazan a los perfiles de redes sociales del cliente, mostradas en el orden listado. Arrastrá para reordenarlas.',
       group: 'contents',
       of: [{type: 'socialMediaLink'}],
       validation: (Rule) =>
@@ -81,7 +70,7 @@ export const underConstructionScreen = defineType({
           const refs = links.map((link) => link?.profile?._ref).filter(Boolean)
           const duplicated = refs.some((ref, index) => refs.indexOf(ref) !== index)
 
-          return duplicated ? 'Each social media profile can only be listed once.' : true
+          return duplicated ? 'Cada perfil de redes sociales solo puede ser listado una vez.' : true
         }),
     }),
   ],
@@ -92,8 +81,8 @@ export const underConstructionScreen = defineType({
     },
     prepare({title, media}) {
       return {
-        title: title || 'Untitled Under Construction Screen',
-        subtitle: 'Under Construction Screen',
+        title: title || '(Sin título)',
+        subtitle: 'Pantalla de sitio en construcción',
         media: media || LockIcon,
       }
     },

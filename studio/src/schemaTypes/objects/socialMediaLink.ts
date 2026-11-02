@@ -9,33 +9,32 @@ import {LinkIcon} from '@sanity/icons'
  * The icon lives here rather than on the profile because the right icon depends
  * on the design of the section it appears in.
  */
-
 export const socialMediaLink = defineType({
   name: 'socialMediaLink',
-  title: 'Social media link',
+  title: 'Enlace a red social',
   type: 'object',
   icon: LinkIcon,
   fields: [
     defineField({
       name: 'profile',
-      title: 'Profile',
+      title: 'Perfil de red social',
       type: 'reference',
       to: [{type: 'socialMediaProfile'}],
-      description: 'The social media profile this links to.',
+      description: 'El perfil de red social al que enlaza.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'icon',
-      title: 'Icon',
+      title: 'Ícono',
       type: 'image',
-      description: 'The icon shown for this profile. An SVG works best.',
+      description: 'El ícono mostrado para este perfil.',
       validation: (Rule) => Rule.required(),
       fields: [
         defineField({
           name: 'alt',
-          title: 'Alternative text',
+          title: 'Texto alternativo',
           description:
-            'Leave empty when the profile name is already shown next to the icon, so screen readers do not read it twice.',
+            'Dejalo vacío cuando el nombre del perfil ya esté mostrado junto al ícono, para que los lectores de pantalla no lo lean dos veces.',
           type: 'string',
         }),
       ],
@@ -49,7 +48,7 @@ export const socialMediaLink = defineType({
     },
     prepare({title, subtitle, media}) {
       return {
-        title: title || 'No profile selected',
+        title: title || '(Sin perfil)',
         subtitle,
         media,
       }

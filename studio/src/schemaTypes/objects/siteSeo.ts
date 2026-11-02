@@ -1,77 +1,64 @@
 import {defineField, defineType} from 'sanity'
 import {SearchIcon} from '@sanity/icons'
 
+import {altText} from '../fields/altText'
+
 /**
  * Site-wide SEO defaults.  Mirrors the per-document `seo` object, but its core
  * fields are required: these are the values every other document falls back to
  * when it leaves the matching field empty.
  */
-
 export const siteSeo = defineType({
   name: 'siteSeo',
-  title: 'Default SEO',
+  title: 'SEO global',
   type: 'object',
   icon: SearchIcon,
   fields: [
     defineField({
       name: 'title',
-      title: 'Default title',
+      title: 'Título predeterminado',
       type: 'string',
       description:
-        'Used for any page that does not define its own SEO title. Also acts as the site name appended to page titles.',
+        'Usado para cualquier página que no defina su propio título SEO. También se agrega al título de las páginas que sí lo definen.',
       validation: (Rule) => [
         Rule.required(),
-        Rule.max(60).warning('Titles longer than 60 characters may be truncated.'),
+        Rule.max(60).warning('Los títulos de más de 60 caracteres pueden ser truncados.'),
       ],
     }),
     defineField({
       name: 'description',
-      title: 'Default meta description',
+      title: 'Descripción meta predeterminada',
       type: 'text',
       rows: 3,
-      description: 'Used for any page that does not define its own meta description.',
+      description: 'Usada para cualquier página que no defina su propia descripción meta.',
       validation: (Rule) => [
         Rule.required(),
-        Rule.max(160).warning('Descriptions longer than 160 characters may be truncated.'),
+        Rule.max(160).warning('Las descripciones de más de 160 caracteres pueden ser truncadas.'),
       ],
     }),
     defineField({
       name: 'ogImage',
-      title: 'Default social sharing image',
+      title: 'Imagen predeterminada para compartir en redes sociales (Open Graph)',
       type: 'image',
       description:
-        'Used for any page that does not define its own. Recommended size: 1200x630.',
+        'Usada para cualquier página que no defina su propia imagen para compartir. Tamaño recomendado: 1200x630 px.',
       options: {
         hotspot: true,
       },
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alternative text',
-          description: 'Important for accessibility and SEO.',
-          type: 'string',
-          validation: (Rule) =>
-            Rule.custom((alt, context) => {
-              const parent = context.parent as {asset?: {_ref?: string}}
-              if (parent?.asset?._ref && !alt) {
-                return 'Required'
-              }
-              return true
-            }),
-        }),
-      ],
+      fields: [altText()],
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'visibility',
-      title: 'Search engine visibility',
+      title: 'Visibilidad para motores de búsqueda',
       type: 'string',
       description:
-        'The site-wide default. Individual pages can override this, or inherit it.',
+        'La configuración predeterminada para todo el sitio. Las páginas individuales pueden ocultarse de los motores de búsqueda si lo desean, pero no pueden hacerse visibles si la configuración global del sitio lo oculta todo.',
       initialValue: 'index',
       options: {
         list: [
-          {title: 'Allow indexing', value: 'index'},
-          {title: 'Hide entire site from search engines', value: 'noIndex'},
+          {title: 'Permitir indización', value: 'index'},
+          {title: 'Ocultar todo el sitio de los motores de búsqueda', value: 'noIndex'},
         ],
         layout: 'radio',
       },

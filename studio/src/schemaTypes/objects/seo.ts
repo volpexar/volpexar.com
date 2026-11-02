@@ -1,6 +1,8 @@
 import {defineField, defineType} from 'sanity'
 import {SearchIcon} from '@sanity/icons'
 
+import {altText} from '../fields/altText'
+
 /**
  * SEO schema object.  Per-document search engine and social sharing metadata.
  *
@@ -21,64 +23,49 @@ export const seo = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Title',
+      title: 'Título SEO',
       type: 'string',
       description:
-        'Shown as the browser tab label and the headline in search results. The site name is appended automatically.',
+        'Mostrado en la pestaña del navegador y como título en los resultados de búsqueda. El nombre del sitio se agrega automáticamente. Se usa el valor del sitio si se deja vacío.',
       validation: (Rule) =>
         Rule.max(60).warning(
-          'Titles longer than 60 characters may be truncated in search results.',
+          'Los títulos de más de 60 caracteres pueden ser truncados en los resultados de búsqueda.',
         ),
     }),
     defineField({
       name: 'description',
-      title: 'Meta description',
+      title: 'Meta descripción',
       type: 'text',
       rows: 3,
       description:
-        'The summary shown beneath the title in search results. Falls back to the site-wide description if left empty.',
+        'La descripción que se muestra bajo el título en los resultados de búsqueda. Se usa el valor del sitio si se deja vacío.',
       validation: (Rule) =>
         Rule.max(160).warning(
-          'Descriptions longer than 160 characters may be truncated in search results.',
+          'Las descripciones de más de 160 caracteres pueden ser truncadas en los resultados de búsqueda.',
         ),
     }),
     defineField({
       name: 'ogImage',
-      title: 'Social sharing image',
+      title: 'Imagen para redes sociales (Open Graph)',
       type: 'image',
       description:
-        'Displayed when this page is shared on social media. Falls back to the site-wide image if left empty. Recommended size: 1200x630.',
+        'La imagen que se muestra cuando se comparte esta página en redes sociales. Se usa el valor del sitio si se deja vacío. Tamaño recomendado: 1200x630 px.',
       options: {
         hotspot: true,
       },
-      fields: [
-        defineField({
-          name: 'alt',
-          title: 'Alternative text',
-          description: 'Important for accessibility and SEO.',
-          type: 'string',
-          validation: (Rule) =>
-            Rule.custom((alt, context) => {
-              const parent = context.parent as {asset?: {_ref?: string}}
-              if (parent?.asset?._ref && !alt) {
-                return 'Required'
-              }
-              return true
-            }),
-        }),
-      ],
+      fields: [altText()],
     }),
     defineField({
       name: 'visibility',
-      title: 'Search engine visibility',
+      title: 'Visibilidad para motores de búsqueda',
       type: 'string',
       description:
-        'A page can hide itself from search engines, but cannot make itself visible when the site-wide setting hides everything.',
+        'Una página puede ocultarse de los motores de búsqueda, pero no puede hacerse visible cuando la configuración global del sitio lo oculta todo.',
       initialValue: 'inherit',
       options: {
         list: [
-          {title: 'Use site settings', value: 'inherit'},
-          {title: 'Hide from search engines', value: 'noIndex'},
+          {title: 'Usar configuración global del sitio', value: 'inherit'},
+          {title: 'Ocultar de los motores de búsqueda', value: 'noIndex'},
         ],
         layout: 'radio',
       },

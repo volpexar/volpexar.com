@@ -18,16 +18,16 @@ const isHomePage = (id?: string) => id === HOME_PAGE_ID || id === `drafts.${HOME
 
 export const page = defineType({
   name: 'page',
-  title: 'Page',
+  title: 'Página',
   type: 'document',
   icon: DocumentIcon,
   fields: [
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Nombre',
       type: 'string',
       description:
-        'Used only inside the Studio to identify this page. Never shown on the website.',
+        'Usado solamente en Sanity Studio para identificar la página.',
       // There is only ever one home page, and it has its own entry in the Studio,
       // so it needs no internal name to tell it apart from other pages.
       hidden: ({document}) => isHomePage(document?._id),
@@ -36,13 +36,12 @@ export const page = defineType({
           isHomePage(context.document?._id) || value ? true : 'Required',
         ),
     }),
-
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       description:
-        'The URL path for this page, after the domain. For example, a slug of "about" is served at /about.',
+        'El fragmento de URL que identifica a esta página, después del dominio. Por ejemplo, un slug "about" se sirve en la URL "volpexar.com/about".',
       hidden: ({document}) => isHomePage(document?._id),
       validation: (Rule) =>
         Rule.custom((value: {current?: string} | undefined, context) =>
@@ -57,15 +56,16 @@ export const page = defineType({
       name: 'seo',
       title: 'SEO',
       type: 'seo',
+      description: 'Configuración de SEO para esta página.',
       // An empty SEO title falls back to the site-wide title, which is what the
       // home page wants: it should render as just "Volpexar", not "Volpexar | Volpexar".
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'pageBuilder',
-      title: 'Page builder',
+      title: 'Secciones',
       type: 'pageBuilder',
-      description: 'All visible content on this page, section by section.',
+      description: 'Las secciones de contenido que componen esta página, en orden de aparición.',
     }),
   ],
   // The document list shows the internal name, which is what editors use to find
@@ -80,11 +80,11 @@ export const page = defineType({
       // The home page has neither an internal name nor a slug, so describe it by
       // what it is instead of falling back to "Untitled".
       if (isHomePage(_id)) {
-        return {title: 'Home Page', subtitle: '/'}
+        return {title: 'Página de inicio', subtitle: '/'}
       }
       return {
-        title: title || 'Untitled page',
-        subtitle: slug ? `/${slug}` : 'No slug set',
+        title: title || '(Página sin nombre)',
+        subtitle: slug ? `/${slug}` : undefined,
       }
     },
   },

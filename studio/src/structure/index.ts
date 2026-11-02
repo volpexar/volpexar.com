@@ -16,15 +16,15 @@ const HOME_PAGE_IDS = [HOME_PAGE_ID, `drafts.${HOME_PAGE_ID}`]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
-    .title('Website Content')
+    .title('Contenido del sitio web')
     .items([
       // The home page is a single `page` document pinned to a fixed ID, served at
       // the site root.  It has no slug, so it cannot also be reached at /<slug>.
       S.listItem()
-        .title('Home Page')
+        .title('Página de inicio')
         .id('homePage')
         .icon(HomeIcon)
-        .child(S.document().schemaType('page').documentId(HOME_PAGE_ID).title('Home Page')),
+        .child(S.document().schemaType('page').documentId(HOME_PAGE_ID).title('Página de inicio')),
       ...S.documentTypeListItems()
         // Remove the "settings" content from the list of content types
         .filter((listItem: any) => !DISABLED_TYPES.includes(listItem.getId()))
@@ -45,7 +45,7 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
         }),
       // Settings Singleton in order to view/edit the one particular document for Settings.  Learn more about Singletons: https://www.sanity.io/docs/create-a-link-to-a-single-edit-page-in-your-main-document-type-list
       S.listItem()
-        .title('Site Settings')
+        .title('Configuración del sitio web')
         .child(S.document().schemaType('settings').documentId('siteSettings'))
         .icon(CogIcon),
     ])

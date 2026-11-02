@@ -2,48 +2,55 @@ import {defineField, defineType} from 'sanity'
 import {CaseIcon} from '@sanity/icons'
 
 import {altText} from '../fields/altText'
-import {uniqueName} from '../validation/uniqueName'
 
 /**
- * Client document.  A business Volpexar has worked for.
+ * Client document. A business or person Volpexar has worked for.
  *
- * Every project names its client, so a client defined here is public: contracts
- * allow Volpexar to show its work for them in the portfolio.
+ * Names can repeat, since two clients can share one. The preview shows the document ID so editors can
+ * tell them apart.
  */
 
 export const client = defineType({
   name: 'client',
-  title: 'Client',
+  title: 'Cliente',
   type: 'document',
   icon: CaseIcon,
   fields: [
     defineField({
       name: 'name',
-      title: 'Name',
+      title: 'Nombre',
       type: 'string',
-      description: 'The business name, as it should be shown on the site.',
-      validation: (Rule) => uniqueName(Rule, 'client', 'client'),
+      description: 'El nombre del cliente.',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'logo',
-      title: 'Logo',
+      title: 'Logotipo',
       type: 'image',
-      description: 'An SVG or a PNG with a transparent background works best.',
+      description: 'El logotipo del cliente, si existe.',
       fields: [altText()],
     }),
     defineField({
       name: 'website',
-      title: 'Website',
+      title: 'Sitio web',
       type: 'url',
-      description: "The client's own website, if they have one.",
+      description: "El sitio web del cliente, si existe.",
       validation: (Rule) => Rule.uri({scheme: ['http', 'https']}),
     }),
   ],
   preview: {
     select: {
       title: 'name',
-      subtitle: 'website',
+      id: '_id',
       media: 'logo',
+    },
+    prepare({title, id, media}) {
+      return {
+        title,
+        // A draft's id carries a prefix; show the id the client is referenced by.
+        subtitle: id?.replace(/^drafts\./, ''),
+        media,
+      }
     },
   },
 })

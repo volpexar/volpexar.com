@@ -19,5 +19,5 @@ export const uniqueName = (Rule: StringRule, type: string, label = 'document') =
       {type, name, id, draftId: `drafts.${id}`},
     )
 
-    return duplicate ? `A ${label} named "${duplicate}" already exists.` : true
+    return duplicate ? `Ya existe un ${label} llamado "${duplicate}".` : true
   })
